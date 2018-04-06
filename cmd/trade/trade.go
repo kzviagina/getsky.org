@@ -4,11 +4,11 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/AlexSugak/getsky-trade/db"
-	"github.com/AlexSugak/getsky-trade/src/trade"
-	"github.com/AlexSugak/getsky-trade/src/util/logger"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
+	"github.com/skycoin/getsky.org/db"
+	"github.com/skycoin/getsky.org/src/trade"
+	"github.com/skycoin/getsky.org/src/util/logger"
 )
 
 func main() {

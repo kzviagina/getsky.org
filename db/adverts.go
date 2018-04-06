@@ -3,9 +3,9 @@ package db
 import (
 	"database/sql"
 
-	"github.com/AlexSugak/getsky-trade/db/models"
-	"github.com/AlexSugak/getsky-trade/src/board"
 	"github.com/jmoiron/sqlx"
+	"github.com/skycoin/getsky.org/db/models"
+	"github.com/skycoin/getsky.org/src/board"
 )
 
 const advertsFields = ` a.Id,` +

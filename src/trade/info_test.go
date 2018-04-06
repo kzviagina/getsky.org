@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/AlexSugak/getsky-trade/src/util/test"
+	"github.com/skycoin/getsky.org/src/util/test"
 	"github.com/stretchr/testify/require"
 )
 

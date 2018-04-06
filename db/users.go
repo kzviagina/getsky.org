@@ -3,8 +3,8 @@ package db
 import (
 	"fmt"
 
-	"github.com/AlexSugak/getsky-trade/db/models"
 	"github.com/jmoiron/sqlx"
+	"github.com/skycoin/getsky.org/db/models"
 	"golang.org/x/crypto/bcrypt"
 )
 

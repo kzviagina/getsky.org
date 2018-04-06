@@ -5,14 +5,14 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/AlexSugak/getsky-trade/db/models"
-	"github.com/AlexSugak/getsky-trade/src/board"
-	ce "github.com/AlexSugak/getsky-trade/src/errors"
 	"github.com/shopspring/decimal"
+	"github.com/skycoin/getsky.org/db/models"
+	"github.com/skycoin/getsky.org/src/board"
+	ce "github.com/skycoin/getsky.org/src/errors"
 	validator "gopkg.in/go-playground/validator.v9"
 
-	"github.com/AlexSugak/getsky-trade/src/util/httputil"
 	"github.com/jmoiron/sqlx/types"
+	"github.com/skycoin/getsky.org/src/util/httputil"
 )
 
 // PostAdvertRequest represents a POST advert request model

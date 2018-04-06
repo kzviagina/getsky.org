@@ -3,8 +3,8 @@ package trade
 import (
 	"net/http"
 
-	"github.com/AlexSugak/getsky-trade/src/util/httputil"
 	"github.com/gorilla/mux"
+	"github.com/skycoin/getsky.org/src/util/httputil"
 )
 
 // GetSkycoinPrice returns Skycoin price based on information, received from coinmarketcap.com.

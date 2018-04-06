@@ -10,8 +10,9 @@ import (
 
 	"github.com/jmoiron/sqlx"
 
-	tradedb "github.com/AlexSugak/getsky-trade/db"
-	"github.com/AlexSugak/getsky-trade/src/util/test"
+	tradedb "github.com/skycoin/getsky.org/db"
+	"github.com/skycoin/getsky.org/src/util/test"
+
 	_ "github.com/mattes/migrate/source/file"
 	"github.com/stretchr/testify/require"
 )

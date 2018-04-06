@@ -3,8 +3,8 @@ package db
 import (
 	"time"
 
-	"github.com/AlexSugak/getsky-trade/db/models"
 	"github.com/jmoiron/sqlx"
+	"github.com/skycoin/getsky.org/db/models"
 )
 
 // Messages is a storage of messages

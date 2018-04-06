@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/AlexSugak/getsky-trade/src/util/httputil"
+	"github.com/skycoin/getsky.org/src/util/httputil"
 )
 
 // AvailableCountriesHandler returns available countries

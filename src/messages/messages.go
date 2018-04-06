@@ -1,8 +1,8 @@
 package messages
 
 import (
-	"github.com/AlexSugak/getsky-trade/db"
-	"github.com/AlexSugak/getsky-trade/db/models"
+	"github.com/skycoin/getsky.org/db"
+	"github.com/skycoin/getsky.org/db/models"
 )
 
 // Messages is a storage of messages

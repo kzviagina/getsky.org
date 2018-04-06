@@ -1,8 +1,8 @@
 package db
 
 import (
-	"github.com/AlexSugak/getsky-trade/db/models"
 	"github.com/jmoiron/sqlx"
+	"github.com/skycoin/getsky.org/db/models"
 )
 
 // Geo implements Geo interface using data stored in MySql DB

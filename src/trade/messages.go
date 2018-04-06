@@ -6,13 +6,13 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/AlexSugak/getsky-trade/db/models"
 	"github.com/gorilla/mux"
 	"github.com/jmoiron/sqlx/types"
+	"github.com/skycoin/getsky.org/db/models"
 	validator "gopkg.in/go-playground/validator.v9"
 
-	ce "github.com/AlexSugak/getsky-trade/src/errors"
-	"github.com/AlexSugak/getsky-trade/src/util/httputil"
+	ce "github.com/skycoin/getsky.org/src/errors"
+	"github.com/skycoin/getsky.org/src/util/httputil"
 )
 
 type createMessageRequest struct {
