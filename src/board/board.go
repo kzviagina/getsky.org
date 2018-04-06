@@ -1,6 +1,6 @@
 package board
 
-import "github.com/AlexSugak/getsky-trade/db/models"
+import "github.com/skycoin/getsky.org/db/models"
 
 // AdvertType represents the type of advert
 type AdvertType int

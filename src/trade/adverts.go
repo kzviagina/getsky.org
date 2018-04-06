@@ -5,10 +5,10 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/AlexSugak/getsky-trade/db/models"
-	"github.com/AlexSugak/getsky-trade/src/board"
-	"github.com/AlexSugak/getsky-trade/src/util/httputil"
 	"github.com/gorilla/mux"
+	"github.com/skycoin/getsky.org/db/models"
+	"github.com/skycoin/getsky.org/src/board"
+	"github.com/skycoin/getsky.org/src/util/httputil"
 )
 
 // LatestSellAdvertsHandler returns 10 latest sell adverts

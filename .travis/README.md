@@ -1,8 +1,8 @@
 # CI/CD configuration
 
 [Travis](https://travis-ci.org/) is used for both CI and CD. <br />
-Every push to `master` triggers a new build that runs linters and tests (see [.travis.yml](https://github.com/AlexSugak/getsky-trade/blob/master/.travis.yml) for more details). <br />
-In case of successfull build, a new version of the site is deployed to test server, see [deploy.sh](https://github.com/AlexSugak/getsky-trade/blob/master/.travis/deploy.sh)
+Every push to `master` triggers a new build that runs linters and tests (see [.travis.yml](https://github.com/skycoin/getsky.org/blob/master/.travis.yml) for more details). <br />
+In case of successfull build, a new version of the site is deployed to test server, see [deploy.sh](https://github.com/skycoin/getsky.org/blob/master/.travis/deploy.sh)
 
 ## test server config
 - on stock Ubuntu 16.04, install following dependencies (via apt-get): `git`, `ruby-dev`, `gcc`, `libffi-dev`, `make`

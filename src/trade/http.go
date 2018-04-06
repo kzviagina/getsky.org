@@ -7,16 +7,16 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/AlexSugak/getsky-trade/src/auth"
-	"github.com/AlexSugak/getsky-trade/src/board"
-	"github.com/AlexSugak/getsky-trade/src/geo"
-	"github.com/AlexSugak/getsky-trade/src/messages"
-	"github.com/AlexSugak/getsky-trade/src/skycoinPrice"
-	"github.com/AlexSugak/getsky-trade/src/user"
-	"github.com/AlexSugak/getsky-trade/src/util/httputil"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
+	"github.com/skycoin/getsky.org/src/auth"
+	"github.com/skycoin/getsky.org/src/board"
+	"github.com/skycoin/getsky.org/src/geo"
+	"github.com/skycoin/getsky.org/src/messages"
+	"github.com/skycoin/getsky.org/src/skycoinPrice"
+	"github.com/skycoin/getsky.org/src/user"
+	"github.com/skycoin/getsky.org/src/util/httputil"
 	"gopkg.in/go-playground/validator.v9"
 )
 

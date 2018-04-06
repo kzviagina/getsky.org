@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/AlexSugak/getsky-trade/src/errors"
 	"github.com/sirupsen/logrus"
+	"github.com/skycoin/getsky.org/src/errors"
 )
 
 // StatusError represents http handler error, includes original error and http status code to return

@@ -1,8 +1,6 @@
 package geo
 
-import (
-	"github.com/AlexSugak/getsky-trade/db/models"
-)
+import "github.com/skycoin/getsky.org/db/models"
 
 // Geo represents geolocation interface
 type Geo interface {

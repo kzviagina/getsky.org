@@ -5,9 +5,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/AlexSugak/getsky-trade/db/models"
-
 	"github.com/dgrijalva/jwt-go"
+	"github.com/skycoin/getsky.org/db/models"
 )
 
 // Authenticator provides authentication methods

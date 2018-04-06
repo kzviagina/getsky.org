@@ -1,6 +1,6 @@
 package user
 
-import "github.com/AlexSugak/getsky-trade/db/models"
+import "github.com/skycoin/getsky.org/db/models"
 
 // Users serve as an interface to users storage
 type Users interface {
