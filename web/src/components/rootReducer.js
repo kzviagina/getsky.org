@@ -8,6 +8,7 @@ import advertDetails from './routes/AdvertDetails/reducers';
 import messages from './routes/AdvertDetails/Messages/reducers';
 import dashboard from './routes/Dashboard/reducers';
 import preview from './routes/PostingsPreview/reducers';
+import search from './routes/SearchAdverts/reducers';
 import app from './AppInitializer/reducers';
 
 const rootReducer = combineReducers({
@@ -20,6 +21,7 @@ const rootReducer = combineReducers({
     messages,
     preview,
     dashboard,
+    search,
 });
 
 

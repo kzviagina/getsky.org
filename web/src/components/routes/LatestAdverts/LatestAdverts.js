@@ -9,7 +9,7 @@ import { AdvertRow } from 'components/layout/TableAdverts';
 
 import Spinner from 'components/layout/Spinner';
 
-import { Tab, Tabs, TabList, TabPanel } from './Tabs';
+import { Tab, Tabs, TabList, TabPanel } from 'components/layout/Tabs';
 import { getAdverts } from './actions';
 import bgImage from './intro-bg.jpg';
 

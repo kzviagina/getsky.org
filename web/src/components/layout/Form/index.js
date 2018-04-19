@@ -13,6 +13,7 @@ import FormDropdownInput from './FormDropdownInput';
 import FormTextArea from './FormTextArea';
 import FormGroup from './FormGroup';
 import FormItem from './FormItem';
+import FormCheckbox from './FormCheckbox';
 
 export {
     FormInput,
@@ -30,4 +31,5 @@ export {
     FormGroup,
     FormItem,
     FormMessage,
+    FormCheckbox,
 };

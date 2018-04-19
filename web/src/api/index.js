@@ -21,6 +21,19 @@ export const getAllAdverts = () =>
             return { sellAdverts: sell.data, buyAdverts: buy.data };
         }));
 
+export const searchSellAdverts = (query) =>
+    axios.get(`${apiUrl}/postings/sell/search${query}`, headers);
+
+
+export const searchBuyAdverts = (query) =>
+    axios.get(`${apiUrl}/postings/buy/search${query}`, headers);
+
+export const searchAllAdverts = (query) =>
+    axios.all([searchSellAdverts(query), searchBuyAdverts(query)])
+        .then(axios.spread((sell, buy) => {
+            return { sellAdverts: sell.data, buyAdverts: buy.data };
+        }));
+
 export const registerUser = user =>
     axios.post(`${apiUrl}/users`, JSON.stringify(user), headers);
 

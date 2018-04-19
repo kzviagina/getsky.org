@@ -1,8 +1,8 @@
 export const ACCEPT_TRADE_OPTIONS = [{
-    title: 'Cache in person',
+    title: 'Cash in person',
     value: 'tradeCashInPerson',
 }, {
-    title: 'Cache by mail',
+    title: 'Cash by mail',
     value: 'tradeCashByMail',
 }, {
     title: 'Money Order by mail',

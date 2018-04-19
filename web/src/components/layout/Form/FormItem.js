@@ -6,19 +6,21 @@ import FormLabel from './FormLabel';
 import ErrorMessage from './ErrorMessage';
 import ControlMessage from './ControlMessage';
 
-const FormItem = ({ name, label, isRequired, description, showError, error, children }) => (
-    <Wrapper>
-        {label &&
+const FormItem = ({ name, label, isRequired, description, showError, error, children }) => {
+    return (
+        <Wrapper label={label}>
+            {label &&
             <FormLabel for={name}>
                 {label}
                 {isRequired && '*'}
             </FormLabel>
-        }
-        {children}
-        {!showError && description && <ControlMessage>{description}</ControlMessage>}
-        {showError && <ErrorMessage>{error}</ErrorMessage>}
-    </Wrapper>
-);
+            }
+            {children}
+            {!showError && description && <ControlMessage>{description}</ControlMessage>}
+            {showError && <ErrorMessage>{error}</ErrorMessage>}
+        </Wrapper>
+    );
+}
 
 
 FormItem.propTypes = {

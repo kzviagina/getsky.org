@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { rgba } from 'polished';
 import { getBorderColor } from './helper';
 
 const ControlInput = styled.input`
@@ -9,12 +8,13 @@ const ControlInput = styled.input`
     border-width: 1px;
     border-style: solid;
     border-color: ${props => getBorderColor(props)};
+    background: transparent;
     font-family: ${props => props.theme.fontLight};
     font-size: ${props => props.theme.fontSizes[1]}px;
     
     &:focus {
         outline: none;
-        border: 1px solid ${props => rgba(props.theme.colors.black, 0.5)};
+        border: 1px solid ${props => props.theme.colors.blue};
     }
 `;
 

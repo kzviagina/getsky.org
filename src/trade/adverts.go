@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/gorilla/mux"
+	"github.com/gorilla/schema"
 	"github.com/jmoiron/sqlx/types"
 	"github.com/shopspring/decimal"
 	"github.com/skycoin/getsky.org/db/models"
@@ -267,5 +268,49 @@ func ExtendAdvertHandler(s *HTTPServer) httputil.APIHandler {
 
 		advert.ExpiredAt = nextExpirationDate
 		return json.NewEncoder(w).Encode(advert)
+	}
+}
+
+// SearchBuyAdvertsHandler returns filtered buy adverts
+// Method: GET
+// Content-type: application/json
+// URI: /api/postings/buy/search
+func SearchBuyAdvertsHandler(s *HTTPServer) httputil.APIHandler {
+	return func(w http.ResponseWriter, r *http.Request) error {
+		var filters models.SearchAdvertsFilter
+
+		paramsErr := schema.NewDecoder().Decode(&filters, r.URL.Query())
+		if paramsErr != nil {
+			return paramsErr
+		}
+
+		adverts, err := s.board.SearchAdverts(filters, board.Buy, s.serverTime.Now())
+		if err != nil {
+			return err
+		}
+
+		return json.NewEncoder(w).Encode(adverts)
+	}
+}
+
+// SearchSellAdvertsHandler returns filtered sell adverts
+// Method: GET
+// Content-type: application/json
+// URI: /api/postings/sell/search
+func SearchSellAdvertsHandler(s *HTTPServer) httputil.APIHandler {
+	return func(w http.ResponseWriter, r *http.Request) error {
+		var filters models.SearchAdvertsFilter
+
+		paramsErr := schema.NewDecoder().Decode(&filters, r.URL.Query())
+		if paramsErr != nil {
+			return paramsErr
+		}
+
+		adverts, err := s.board.SearchAdverts(filters, board.Sell, s.serverTime.Now())
+		if err != nil {
+			return err
+		}
+
+		return json.NewEncoder(w).Encode(adverts)
 	}
 }

@@ -7,7 +7,10 @@ import FormItem from './FormItem';
 class FormDropdown extends React.Component {
     componentDidMount() {
         // ReduxForm doesn't have a prop for 'defaultValue'. You need to set it manually.
-        const { defaultValue, options, input: { value, onChange } } = this.props;
+        const { defaultValue, options, input: { value, onChange }, triggerOnChange } = this.props;
+
+        if (!triggerOnChange) return;
+
         if (defaultValue) {
             if (!value) {
                 onChange(defaultValue);
@@ -20,7 +23,9 @@ class FormDropdown extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const { defaultValue, options, input: { onChange } } = this.props;
+        const { defaultValue, options, input: { onChange }, triggerOnChange } = this.props;
+
+        if (!triggerOnChange) return;
 
         // ReduxForm doesn't have a prop for 'defaultValue'. You need to set it manually.
         if (prevProps.options.length === 0 && options.length > 0) {
@@ -33,12 +38,12 @@ class FormDropdown extends React.Component {
     }
 
     render() {
-        const { label, defaultValue, isRequired, options, description, input: { name, onChange }, meta: { error, warning, touched } } = this.props;
+        const { label, defaultValue, isRequired, options, description, input: { name, onChange }, meta: { error, warning, touched }, disabled } = this.props;
         const showError = !!(touched && (error || warning));
 
         return (
             <FormItem name={name} label={label} isRequired={isRequired} description={description} showError={showError} error={error}>
-                <ControlDropdown {...this.props} name={name} onChange={onChange} defaultValue={defaultValue} options={options} />
+                <ControlDropdown {...this.props} name={name} onChange={onChange} defaultValue={defaultValue} options={options} disabled={disabled} />
             </FormItem>
         );
     }
@@ -58,6 +63,11 @@ FormDropdown.propTypes = {
     isRequired: PropTypes.bool,
     options: PropTypes.array,
     defaultValue: PropTypes.any,
+    triggerOnChange: PropTypes.bool,
+}
+
+FormDropdown.defaultProps = {
+    triggerOnChange: true
 }
 
 export default FormDropdown;

@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { rgba } from 'polished';
 
 import { getBorderColor } from './helper';
 
@@ -16,8 +15,8 @@ const SelectWrapper = styled.div`
         width: 0;
         height: 0;
         border-style: solid;
-        border-width: 6px 5px 0 5px;
-        border-color: #000000 transparent transparent transparent;
+        border-width: 5px 4px 0 4px;
+        border-color: ${props => props.theme.colors.grayBlue} transparent transparent transparent;
         transform: translateY(-50%);
     }
 `;
@@ -25,25 +24,26 @@ const SelectWrapper = styled.div`
 const Select = styled.select`
     width: 100%;
     height: ${props => props.theme.controlHeight}px;
-    padding: ${props => props.theme.spaces[0]}px ${props => props.theme.spaces[1]}px;
+    padding: ${props => props.theme.spaces[0]}px ${props => props.theme.spaces[5]}px ${props => props.theme.spaces[0]}px ${props => props.theme.spaces[1]}px;
     border-width: 1px;
     border-style: solid;
     border-color: ${props => getBorderColor(props)};
     border-radius: 0;
-    background: ${props => props.theme.colors.white};
+    background: transparent;
     font-family: ${props => props.theme.fontLight};
     font-size: ${props => props.theme.fontSizes[1]}px;
     -webkit-appearance: none;
     
     &:focus {
         outline: none;
-        border: 1px solid ${props => rgba(props.theme.colors.black, 0.5)};
+        border: 1px solid ${props => props.theme.colors.blue};
     }
 `;
 
-const ControlDropdown = ({ name, options, defaultValue, onChange, error, input }) => (
+const ControlDropdown = ({ name, options, defaultValue, onChange, error, input, disabled }) => (
     <SelectWrapper>
-        <Select name={name} value={input && input.value} onChange={onChange} defaultValue={defaultValue} error={error} >
+        <Select name={name} value={input && input.value} onChange={onChange} defaultValue={defaultValue} error={error} disabled={disabled} >
+            <option value="" disabled>Select</option>
             {options.map((item, i) => <option value={item.value} key={i}>{item.text}</option>)}
         </Select>
     </SelectWrapper>

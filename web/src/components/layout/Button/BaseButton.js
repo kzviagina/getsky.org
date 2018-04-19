@@ -6,6 +6,7 @@ const BaseControl = styled.button`
     line-height: 22px;
     font-size: ${props => props.theme.fontSizes[1]}px;
     border-width: 1px;
+    width: ${props => props.block ? '100%': 'auto'};
 
     &:focus {
         outline: none;
