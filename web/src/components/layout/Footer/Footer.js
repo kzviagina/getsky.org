@@ -1,80 +1,52 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 import { Box } from 'grid-styled';
-import Container from '../Container';
-import Brand from '../Brand';
-import SocialMenu from '../SocialLinks';
 
-const infoLinks = [
-    { name: 'Home', url: '/' },
-    { name: 'Search adverts', url: '/search' },
-    { name: 'Why Skycoin?', url: '/' },
-    { name: 'FAQs', url: '/' },
-    { name: 'Contact', url: '/' },
-];
-const userLinks = [
-    { name: 'Register', url: '/' },
-    { name: 'Log in', url: '/' },
-    { name: 'Privacy', url: '/' },
-    { name: 'Terms', url: '/' },
-];
+import Promo from 'components/layout/Promo';
+import Container from 'components/layout/Container';
+import Brand from 'components/layout/Brand';
+import { Link } from 'components/layout/Links';
+import SocialLinks from 'components/layout/SocialLinks';
 
-const getSkyLink = 'https://www.getsky.org/';
-const skycoinLink = 'http://www.skycoin.org/';
+const Background = styled(Box) `
+    background: ${props => `linear-gradient(${props.theme.colors.darkBlue}, ${props.theme.colors.black})`};
+    margin-top: -200px;
+    padding-top: 260px;
+`
 
-const Subfooter = styled.div`
-    background: ${props => props.theme.colors.black};
-    color: ${props => props.theme.colors.white};
-    
-    .descr {
-        margin: 0;
-        max-width: 200px;
-        font-size: 16px;
-        line-height: 1.4;
-    }
-    
-    a {
-        display: block;
-        font-size: 17px;
-        line-height: 1.4;
-        color: ${props => props.theme.colors.white};
-    }
+const LinksContainer = styled(Container) `
+    border-bottom: 1px solid #979797;
+    padding-bottom: 61px;
 `;
 
-const Footer = styled.footer`
-    font-size: 17px;
-    
-    a {
-        font-family: ${props => props.theme.fontBold};        
-    }
+const MicroText = styled(Box) `
+    color: ${props => props.theme.colors.grayBlue};
+    font-size: ${props => props.theme.fontSizes[1]}px;
 `;
 
 export default () => (
-    <div>
-        <Subfooter className="subfooter">
-            <Container justifyContent="space-between" py={4}>
-                <Box w={1 / 2}>
-                    <Brand />
-                    <p className="descr">our aim is to spread the news of skycoin far and wide for all of the world to hear. Have you heard yet? Skycoin is the new Benjamin</p>
-                </Box>
-                <Box w={1 / 4}>
-                    {infoLinks.map((item, i) => (
-                        <Link to={item.url} key={i}>{item.name}</Link>
-                    ))}
-                </Box>
-                <Box w={1 / 4}>
-                    {userLinks.map((item, i) => (
-                        <Link to={item.url} key={i}>{item.name}</Link>
-                    ))}
-                </Box>
+    <Box mt={'125px'}>
+        <Promo />
+        <Background>
+            <LinksContainer justifyContent={'space-between'}>
+                <Link path={''} text={'Home'} />
+                <Link path={''} text={'Why Scycoin'} />
+                <Link path={''} text={'Search'} />
+                <Link path={''} text={'FAQ'} />
+                <Link path={''} text={'Contact'} />
+                <Link path={''} text={'Privacy'} />
+                <Link path={''} text={'Terms'} />
+            </LinksContainer>
+            <Container justifyContent={'center'} my={'76px'}>
+                <Brand />
             </Container>
-        </Subfooter>
-        <Footer className="footer">
-            <Container alignItems="center" justifyContent="space-between">
-                <p><a href={getSkyLink}>getSky</a> | a community built on <a href={skycoinLink}>Skycoin</a></p>
-                <SocialMenu />
+            <Container justifyContent={'space-between'} alignItems={'center'} height={'74px'} >
+                <MicroText>Have you heard yet? Skycoin is the new Benjamin</MicroText>
+                <Box>
+                    <SocialLinks />
+                </Box>
+                <MicroText>©2018 GetSky.com. All rights reserved.</MicroText>
             </Container>
-        </Footer>
-    </div>
+        </Background>
+    </Box>
 );

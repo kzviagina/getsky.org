@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	"time"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/skycoin/getsky.org/db/models"
@@ -27,7 +28,8 @@ const advertsFields = ` a.Id,` +
 	` a.City,` +
 	` a.PostalCode,` +
 	` a.Status,` +
-	` a.CreatedAt`
+	` a.CreatedAt, ` +
+	` a.ExpiredAt`
 
 // Storage stands for main DB storage
 type Storage struct {
@@ -48,7 +50,7 @@ func (s Storage) GetAdvertsEnquiredByUserWithMessageCounts(userID int64) ([]mode
 		` FROM Adverts a` +
 		` INNER JOIN Users u ON a.Author = u.Id` +
 		` INNER JOIN Messages m ON a.Id = m.AdvertId` +
-		` WHERE (m.Author = ? OR m.Recipient = ?) AND a.Author <> ?`
+		` WHERE (m.Author = ? OR m.Recipient = ?) AND a.Author <> ? AND a.IsDeleted = 0`
 
 	rows, err := s.DB.Query(cmd, userID, userID, userID)
 	if err != nil {
@@ -88,6 +90,7 @@ func (s Storage) GetAdvertsEnquiredByUserWithMessageCounts(userID int64) ([]mode
 			&ad.PostalCode,
 			&ad.Status,
 			&ad.CreatedAt,
+			&ad.ExpiredAt,
 			&ad.Author,
 			&recipient,
 			&isRead)
@@ -150,7 +153,7 @@ func (s Storage) GetAdvertsWithMessageCountsByUserID(userID int64) ([]models.Adv
 		` FROM Adverts a` +
 		` INNER JOIN Users u ON a.Author = u.Id` +
 		` LEFT JOIN Messages m ON a.Id = m.AdvertId` +
-		` WHERE a.Author = ? AND (m.Recipient = ? OR m.Recipient IS NULL)`
+		` WHERE a.Author = ? AND (m.Recipient = ? OR m.Recipient IS NULL) AND a.IsDeleted = 0`
 
 	rows, err := s.DB.Query(cmd, userID, userID)
 	if err != nil {
@@ -187,6 +190,7 @@ func (s Storage) GetAdvertsWithMessageCountsByUserID(userID int64) ([]models.Adv
 			&ad.PostalCode,
 			&ad.Status,
 			&ad.CreatedAt,
+			&ad.ExpiredAt,
 			&ad.Author,
 			&isRead)
 		if err != nil {
@@ -226,7 +230,7 @@ func (s Storage) GetAdvertsWithMessageCountsByUserID(userID int64) ([]models.Adv
 }
 
 // GetLatestAdverts returns 10 latest adverts
-func (s Storage) GetLatestAdverts(t board.AdvertType, limit int) ([]models.AdvertDetails, error) {
+func (s Storage) GetLatestAdverts(t board.AdvertType, limit int, time time.Time) ([]models.AdvertDetails, error) {
 	adverts := []models.AdvertDetails{}
 	err := s.DB.Select(&adverts,
 		`SELECT `+
@@ -250,11 +254,12 @@ func (s Storage) GetLatestAdverts(t board.AdvertType, limit int) ([]models.Adver
 			` a.City,`+
 			` a.PostalCode,`+
 			` a.Status,`+
-			` a.CreatedAt`+
+			` a.CreatedAt, `+
+			` a.ExpiredAt`+
 			` FROM Adverts a`+
 			` LEFT JOIN Users u ON a.Author = u.Id`+
-			` WHERE a.Type = ?`+
-			` ORDER BY CreatedAt LIMIT ?`, t, limit)
+			` WHERE a.Type = ? AND a.ExpiredAt > ? AND a.IsDeleted = 0`+
+			` ORDER BY CreatedAt LIMIT ?`, t, time, limit)
 	if err != nil {
 		return nil, err
 	}
@@ -288,10 +293,11 @@ func (s Storage) GetAdvertDetails(advertID int64) (models.AdvertDetails, error) 
 			` a.City,`+
 			` a.PostalCode,`+
 			` a.Status,`+
-			` a.CreatedAt`+
+			` a.CreatedAt, `+
+			` a.ExpiredAt`+
 			` FROM getskytrade.Adverts a`+
 			` LEFT JOIN getskytrade.Users u ON a.Author = u.Id`+
-			` WHERE a.Id = ?`, advertID)
+			` WHERE a.Id = ? AND a.IsDeleted = 0`, advertID)
 
 	if err != nil {
 		return models.AdvertDetails{}, err
@@ -302,6 +308,42 @@ func (s Storage) GetAdvertDetails(advertID int64) (models.AdvertDetails, error) 
 	}
 
 	return models.AdvertDetails{}, nil
+}
+
+// DeleteAdvert removes advert from the DB
+func (s Storage) DeleteAdvert(advertID int64) error {
+	cmd := `UPDATE Adverts SET IsDeleted = 1 WHERE Id = ?`
+	_, err := s.DB.Exec(cmd, advertID)
+	return err
+}
+
+// UpdateAdvert updates fields of the specified advert in the DB
+func (s Storage) UpdateAdvert(advert *models.Advert) error {
+	cmd := `UPDATE Adverts ` +
+		`SET ` +
+		` TradeCashInPerson=:TradeCashInPerson, ` +
+		` TradeCashByMail = :TradeCashByMail, ` +
+		` TradeMoneyOrderByMail = :TradeMoneyOrderByMail, ` +
+		` TradeOther = :TradeOther, ` +
+
+		` AmountFrom = :AmountFrom, ` +
+		` AmountTo = :AmountTo, ` +
+		` FixedPrice = :FixedPrice, ` +
+		` PercentageAdjustment = :PercentageAdjustment, ` +
+		` Currency = :Currency, ` +
+		` AdditionalInfo = :AdditionalInfo, ` +
+
+		` TravelDistance = :TravelDistance, ` +
+		` TravelDistanceUoM = :TravelDistanceUoM, ` +
+		` CountryCode = :CountryCode, ` +
+		` StateCode = :StateCode, ` +
+		` City = :City, ` +
+		` PostalCode = :PostalCode, ` +
+		` Status = :Status ` +
+		` WHERE Id = :Id `
+
+	_, err := s.DB.NamedExec(cmd, advert)
+	return err
 }
 
 // InsertAdvert inserts a new advert record to the DB
@@ -328,7 +370,8 @@ func (s Storage) InsertAdvert(advert *models.Advert) (int64, error) {
 		` City, ` +
 		` PostalCode, ` +
 		` Status, ` +
-		` CreatedAt) ` +
+		` CreatedAt, ` +
+		` ExpiredAt)` +
 
 		` VALUES ` +
 		` (:Type, ` +
@@ -352,7 +395,8 @@ func (s Storage) InsertAdvert(advert *models.Advert) (int64, error) {
 		` :City, ` +
 		` :PostalCode, ` +
 		` :Status, ` +
-		` :CreatedAt) `
+		` :CreatedAt, ` +
+		` :ExpiredAt)`
 
 	res, err := s.DB.NamedExec(cmd, advert)
 	if err != nil {
@@ -363,4 +407,15 @@ func (s Storage) InsertAdvert(advert *models.Advert) (int64, error) {
 		return 0, err
 	}
 	return lastInsertID, err
+}
+
+// ExtendExperationTime updates expiredAt of an advert
+func (s Storage) ExtendExperationTime(ID int64, expirationDate time.Time) error {
+	cmd := `UPDATE Adverts` +
+		` SET ExpiredAt = ? ` +
+		` WHERE Id = ?`
+
+	_, err := s.DB.Exec(cmd, expirationDate, ID)
+
+	return err
 }

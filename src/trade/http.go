@@ -13,6 +13,7 @@ import (
 	"github.com/skycoin/getsky.org/src/auth"
 	"github.com/skycoin/getsky.org/src/board"
 	"github.com/skycoin/getsky.org/src/geo"
+	"github.com/skycoin/getsky.org/src/mail"
 	"github.com/skycoin/getsky.org/src/messages"
 	"github.com/skycoin/getsky.org/src/skycoinPrice"
 	"github.com/skycoin/getsky.org/src/user"
@@ -23,6 +24,7 @@ import (
 // HTTPServer holds http server info
 type HTTPServer struct {
 	serverTime     ServerTime
+	mailer         mail.IMailer
 	skycoinPrices  *skycoinPrice.SkycoinPrices
 	checkRecaptcha auth.RecaptchaChecker
 	binding        string
@@ -39,10 +41,11 @@ type HTTPServer struct {
 }
 
 // NewHTTPServer creates new http server
-func NewHTTPServer(recaptchaSecret string, binding string, board board.Board, users user.Users, a auth.Authenticator, log logrus.FieldLogger, g geo.Geo, messages messages.Messages) *HTTPServer {
+func NewHTTPServer(recaptchaSecret string, binding string, board board.Board, users user.Users, a auth.Authenticator, log logrus.FieldLogger, g geo.Geo, messages messages.Messages, mailer mail.IMailer) *HTTPServer {
 	return &HTTPServer{
 		checkRecaptcha: auth.InitRecaptchaChecker(recaptchaSecret),
 		skycoinPrices:  skycoinPrice.NewSkycoinPrices(),
+		mailer:         mailer,
 		binding:        binding,
 		board:          board,
 		users:          users,
@@ -131,6 +134,8 @@ func (s *HTTPServer) setupRouter(Secure Secure) http.Handler {
 	r.Handle("/api/states", httputil.ErrorHandler(s.log, AvailableStatesHandler(s))).Methods("GET")
 
 	r.Handle("/api/users", API(RegisterHandler)).Methods("POST")
+	r.Handle("/api/feedback", API(FeedbackHandler)).Methods("POST")
+
 	r.Handle("/api/users/authenticate", API(AuthenticateHandler)).Methods("POST")
 	r.Handle("/api/me", Secure(API(MeHandler))).Methods("GET")
 	r.Handle("/api/me/settings", Secure(API(UpdateUserSettingsHandler))).Methods("POST")
@@ -143,6 +148,9 @@ func (s *HTTPServer) setupRouter(Secure Secure) http.Handler {
 	r.Handle("/api/postings/sell", Secure(API(SellAdvertHandler))).Methods("POST")
 	r.Handle("/api/postings/buy/latest", API(LatestBuyAdvertsHandler)).Methods("GET")
 	r.Handle("/api/postings/buy", Secure(API(BuyAdvertHandler))).Methods("POST")
+	r.Handle("/api/postings/{id}", Secure(API(UpdateAdvertHandler))).Methods("PUT")
+	r.Handle("/api/postings/{id}", Secure(API(DeleteAdvertHandler))).Methods("DELETE")
+	r.Handle("/api/postings/{id}/extend", Secure(API(ExtendAdvertHandler))).Methods("POST")
 
 	r.Handle("/api/postings/{id}/messages", Secure(API(PostMessageHandler))).Methods("POST")
 	r.Handle("/api/messages/{id}", Secure(API(UpdateMessageHandler))).Methods("PUT")

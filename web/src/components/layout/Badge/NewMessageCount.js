@@ -1,38 +1,48 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Flex } from 'grid-styled';
+import { Flex, Box } from 'grid-styled';
 
 import Icon, { IconMap } from 'components/layout/Icon';
-import { Span } from 'components/layout/Text';
+import RedCircle from './RedCircle';
 
-const NewMessageContainer = styled(({ hasNewMessages, ...props }) => <Flex {...props} />) `
-    display: inline-flex;
-    background: ${props => props.hasNewMessages ? props.theme.colors.warningLight : props.theme.colors.lightGray};
-
-    padding-left: 5px;
-    padding-right: 5px;
-    margin-bottom: 5px;
-
-    Span {
-        padding-top: 1px;
-        margin-left: 10px;
-    }
+const NewMessageCountContainer = styled(Box) `
+    color: ${props => props.theme.colors.grayBlue};
+    font-size: 12px;
+    line-height: 13px;
+    text-align: center;
 `;
 
-const getLabel = (newMessages, totalMessages) => {
-    if (newMessages && newMessages > 0) {
-        return `${newMessages} new / ${totalMessages}`;
-    }
+const CircleContainer = styled.div`
+    position: relative;
+    top: -1px;
+    right: 5px;
+`;
 
-    return `${totalMessages} messages`
-};
+const NewMessagesContainer = styled.div`
+    color: ${props => props.theme.colors.red};
+    margin-right: 3px;
+`;
 
 const NewMessageCount = ({ newMessages, totalMessages }) => (
-    <NewMessageContainer alignItems={'center'} flexWrap={'wrap'} hasNewMessages={newMessages > 0}>
-        <Icon name={IconMap.Envelope} />
-        <Span>{getLabel(newMessages, totalMessages)}</Span>
-    </NewMessageContainer>
+    <NewMessageCountContainer justifyContent={'center'}>
+        <Flex ml={'10px'}>
+            <Icon name={IconMap.Envelope} />
+            {newMessages > 0 &&
+                <CircleContainer>
+                    <RedCircle />
+                </CircleContainer>
+            }
+        </Flex>
+        <Flex justifyContent={'center'} alignItems={'center'}>
+            {newMessages > 0 &&
+                <NewMessagesContainer>
+                    {newMessages}
+                </NewMessagesContainer>
+            }
+            {newMessages > 0 ? `/ ${totalMessages}` : totalMessages}
+        </Flex>
+    </NewMessageCountContainer>
 );
 
 NewMessageCount.propTypes = {

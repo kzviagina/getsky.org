@@ -1,6 +1,10 @@
 package board
 
-import "github.com/skycoin/getsky.org/db/models"
+import (
+	"time"
+
+	"github.com/skycoin/getsky.org/db/models"
+)
 
 // AdvertType represents the type of advert
 type AdvertType int
@@ -16,7 +20,10 @@ const (
 type Board interface {
 	GetAdvertsEnquiredByUserWithMessageCounts(int64) ([]models.EnquiredAdvertsWithMessageCounts, error)
 	GetAdvertsWithMessageCountsByUserID(int64) ([]models.AdvertsWithMessageCounts, error)
-	GetLatestAdverts(AdvertType, int) ([]models.AdvertDetails, error)
+	GetLatestAdverts(AdvertType, int, time.Time) ([]models.AdvertDetails, error)
 	GetAdvertDetails(int64) (models.AdvertDetails, error)
 	InsertAdvert(*models.Advert) (int64, error)
+	ExtendExperationTime(int64, time.Time) error
+	UpdateAdvert(advert *models.Advert) error
+	DeleteAdvert(advertID int64) error
 }

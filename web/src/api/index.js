@@ -35,7 +35,7 @@ export const getCountries = () =>
 
 export const getStates = () =>
     axios.get(`${apiUrl}/states`, headers);
-    
+
 export const getAdvertDetails = id =>
     axios.get(`${apiUrl}/postings/${id}`, headers);
 
@@ -54,6 +54,12 @@ export const postBuyAdvert = advert =>
 export const postSellAdvert = advert =>
     axios.post(`${apiUrl}/postings/sell`, advert, headers)
 
+export const deleteAdvert = advertId =>
+    axios.delete(`${apiUrl}/postings/${advertId}`, headers);
+
+export const updateAdvert = (advertId, advert) =>
+    axios.put(`${apiUrl}/postings/${advertId}`, advert, headers);
+
 export const getAdvertsForDashboard = () =>
     axios.get(`${apiUrl}/postings/my`, headers)
 
@@ -68,3 +74,9 @@ export const getAdvertMessages = (advertId, username) =>
 
 export const updateAdvertMessage = (messageId, message) =>
     axios.put(`${apiUrl}/messages/${messageId}`, message, headers);
+
+export const extendExpirationDate = advertId =>
+    axios.post(`${apiUrl}/postings/${advertId}/extend`, headers);
+
+export const sendFeedback = feedback =>
+    axios.post(`${apiUrl}/feedback`, feedback, headers);

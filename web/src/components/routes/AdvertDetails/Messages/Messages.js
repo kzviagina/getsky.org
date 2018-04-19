@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Flex, Box } from 'grid-styled';
@@ -6,7 +7,6 @@ import { Flex, Box } from 'grid-styled';
 import Icon, { IconMap } from 'components/layout/Icon';
 import TextArea from 'components/layout/TextArea';
 import { Button } from 'components/layout/Button';
-import theme from 'components/theme';
 import {
     messageStates,
     setMessagesState,
@@ -19,128 +19,436 @@ import {
 } from './actions';
 
 const MessageInput = styled(TextArea) `
-    font-size: ${theme.fontSizes[1]}px;
+    font-size: ${props => props.theme.fontSizes[1]}px;
+    height: 76px;
 `;
 
 const MessageInputNote = styled.p`
-    font-size: ${theme.fontSizes[0]}px;
-    margin-top: 3px;
-    margin-bottom: 7px;
+    font-size: ${props => props.theme.fontSizes[0]}px;
+    margin-top: ${props => props.theme.spaces[1]}px;
+    margin-bottom: ${props => props.theme.spaces[3]}px;
 
-    color: ${theme.colors.gray};
+    color: ${props => props.theme.colors.grayBlue};
 `;
 
 const MessageInputError = styled(MessageInputNote) `
-    color: ${theme.colors.red};
+    color: ${props => props.theme.colors.red};
+`;
+
+const MessagesInputFormContainer = styled.div`
+    margin-top: ${props => props.theme.spaces[3]}px;
+    button {
+        float: right;
+    }
+`;
+
+const MessageInputLabel = styled.p`
+    color: ${props => props.theme.colors.grayBlue};
+    font-size: ${props => props.theme.fontSizes[0]}px;
+    margin: 0;
+    margin-bottom: ${props => props.theme.spaces[1]}px;
 `;
 
 const MessagesInputForm = ({ onChange, messageText, sendMessage }) => (
-    <div>
+    <MessagesInputFormContainer>
+        <MessageInputLabel>Your message</MessageInputLabel>
         <MessageInput placeholder="Your message" onChange={e => onChange(e.target.value)} value={messageText} />
         <MessageInputNote>Up to 10,000 characters</MessageInputNote>
         {messageText.length >= 10000 && <MessageInputError>Characters limit is exceeded</MessageInputError>}
-        <Button disabled={messageText.length >= 10000} text="Send message" onClick={sendMessage} />
-    </div>
+        <Button primary disabled={messageText.length === 0 || messageText.length >= 10000} text="Send message" onClick={sendMessage} />
+    </MessagesInputFormContainer>
 );
 
 const Section = styled(Flex) `
-    margin: ${theme.spaces[0]}px 0px;
-    background-color: ${theme.colors.white};
-    padding: ${theme.spaces[0]}px ${theme.spaces[1]}px;
+    margin: ${props => props.theme.spaces[0]}px 0px;
+    background-color: ${props => props.theme.colors.white};
+    padding: ${props => props.theme.spaces[0]}px ${props => props.theme.spaces[1]}px;
 `;
 const SectionPart = styled(Box) `
-    margin: ${theme.spaces[0]}px 0px;
+    margin: ${props => props.theme.spaces[0]}px 0px;
 
     svg {
-        margin-right: ${theme.spaces[0]}px;
+        margin-right: ${props => props.theme.spaces[0]}px;
     }
 `;
+
 const UsernameSectionPart = styled(({ isRead, children, ...rest }) => <SectionPart {...rest}>{children}</SectionPart>) `
-    color: ${props => props.isRead ? theme.colors.gray : theme.colors.red};
+    color: ${props => props.isRead ? props.theme.colors.gray : props.theme.colors.red};
+    margin-bottom: 0;
 `;
+
 const DateView = styled(SectionPart) `
-    color: ${theme.colors.lightGray};
-    font-size: ${theme.fontSizes[0]}px;
+    color: ${props => props.theme.colors.grayBlue};
+    font-size: ${props => props.theme.fontSizes[0]}px;
     text-align: right;
 `;
 
 const dateToString = d => `${d.toLocaleDateString().toLocaleUpperCase()} ${d.toLocaleTimeString().toLocaleUpperCase()}`;
 
-const BackLink = styled.a`
-        cursor: pointer;
-    font-size: ${theme.fontSizes[1]}px;
+const BaseLink = styled.a`
+    cursor: pointer;
+    font-size: ${props => props.theme.fontSizes[1]}px;
+    color: ${props => props.theme.colors.blue};
 
     svg {
-        margin - right: 3px;
-}
+        margin-right: ${props => props.theme.spaces[1]}px;
+        color: ${props => props.theme.colors.blue};
+    }
 
     &:hover {
-        color: ${theme.colors.gray};
-}
+        text-decoration: underline;
+    }
 `;
 
-const MessagesContainer = ({
-    advert,
-    userInfo,
+const BackLink = styled(BaseLink) `
+    font-size: ${props => props.theme.fontSizes[1]}px;
+`;
 
-    messages,
-    selectedAuthor,
+const Heading = styled(Box) `
+    margin: 0;
+    font-weight: bold;
+    font-size: ${props => props.theme.fontSizes[3]}px;
+`;
 
-    messageText,
-    onChange,
+const NewMessagesInfo = styled.span`
+    color: ${props => props.theme.colors.red};
+    font-weight: bold;
+`;
 
-    sendMessage,
-    backToUsers, }) => (
-        <div>
-            {selectedAuthor &&
-                <BackLink onClick={backToUsers}>
-                    <Icon name={IconMap.AngleLeft} />
-                    Back to users
-                </BackLink>}
-            {messages.map((m, i) => (
-                <Section key={i} flexDirection="row" flexWrap="wrap">
-                    <UsernameSectionPart w={1} isRead={m.author === userInfo.username || m.isRead}>
-                        <Icon name={IconMap.User} />
-                        {m.author}
-                    </UsernameSectionPart>
-                    <SectionPart w={1}>
-                        {m.body}
-                    </SectionPart>
-                    <DateView w={1}>
-                        {dateToString(new Date(m.createdAt))}
-                    </DateView>
-                </Section>
-            ))}
-            <MessagesInputForm onChange={onChange} messageText={messageText} sendMessage={sendMessage} />
-        </div>
+const MessagesInfo = styled(Box) `
+    color: ${props => props.theme.colors.grayBlue};
+    font-size: ${props => props.theme.fontSizes[0]}px;
+
+    div {
+        float: left;
+        margin-right: 3px;
+        margin-top: -3px;
+    }
+`;
+
+const UsernameContainer = styled(Flex) `
+    border-bottom: 1px solid ${props => props.theme.colors.separator};
+`;
+
+const ShowMoreLink = styled(BaseLink) `
+    font-size: ${props => props.theme.fontSizes[0]}px;
+    text-align: center;
+`;
+
+const AuthorInfo = styled.div`
+    width: 100%;
+`;
+
+const ShowMoreLinkContainer = styled.div`
+    width: 100%;
+    text-align: center;
+`;
+
+const Author = ({ backToUsers, selectedAuthor, messages, userInfo, allMessagesVisible, showAllMessages }) => (
+    <AuthorInfo>
+        <BackLink onClick={backToUsers}>
+            <Icon name={IconMap.AngleLeft} />
+            Back to users
+        </BackLink>
+        <UsernameContainer
+            flexDirection="row"
+            justifyContent="space-between"
+            alignItems="flex-end"
+            mt={2} pb={4} mb={4}>
+            <Heading>Messages from {selectedAuthor}</Heading>
+            <MessagesInfo>
+                <Icon name={IconMap.Envelope} />
+                <NewMessagesInfo> {messages.filter(m => m.author !== userInfo.username && !m.isRead).length} new </NewMessagesInfo> / {messages.length}
+            </MessagesInfo>
+        </UsernameContainer>
+        {!allMessagesVisible && <ShowMoreLinkContainer>
+            <ShowMoreLink onClick={showAllMessages}>Show more </ShowMoreLink>
+        </ShowMoreLinkContainer>}
+    </AuthorInfo>
+);
+
+const getAuthorInitials = author => {
+    const words = author.split(' ');
+    if (words.length >= 2) {
+        return `${words[0]}${words[1]}`.toUpperCase();
+    }
+    return author[0].toString().toUpperCase();
+};
+
+const getUserInitialsColor = props => {
+    if (props.color) return props.color;
+    return props.isMyMessage ? props.theme.colors.blue : props.theme.colors.lightPink;
+};
+
+
+const UserInitials = styled.div`
+    flex-shrink: 0;
+    background-color: ${props => (getUserInitialsColor(props))};
+    color: ${props => props.theme.colors.white};
+    width: 44px;
+    height: 44px;
+    line-height: 44px;
+    text-align: center;
+    border: 1px solid ${props => (getUserInitialsColor(props))};
+    border-radius: 100px;
+    font-size: ${props => props.theme.fontSizes[3]}px;
+
+    &:after {
+        position: absolute;
+        margin-left: 3px;
+        margin-top: -3px;
+        width: ${props => props.isRead ? '0' : '10'}px;
+        height: ${props => props.isRead ? '0' : '10'}px;
+        background-color: ${props => props.theme.colors.red};
+        border: ${props => props.isRead ? '0' : '1'}px solid ${props => props.theme.colors.red};
+        border-radius: 100px;
+        content: '';
+    }
+`;
+
+const UsernameLabel = styled.span`
+    color: ${props => props.theme.colors.grayBlue};
+    font-size: ${props => props.theme.fontSizes[0]}px;
+
+    margin-top: ${props => props.theme.spaces[1]}px;
+    margin-left: ${props => props.theme.spaces[6]}px;
+`;
+
+const BaseTriangle = styled.div`
+    width: 0;
+    height: 0;
+    border-style: solid;
+`;
+
+const Triangle = styled(BaseTriangle) `
+    border-width: 12px 0 0 12px;
+    border-color: transparent transparent transparent ${props => props.isMyMessage ? props.theme.colors.lightGreen : props.theme.colors.lightBlue};
+    margin-left: 12px;
+`;
+
+const ReverseTriangle = styled(BaseTriangle) `
+    border-width: 0 0 12px 12px;
+    border-color: transparent transparent ${props => props.isMyMessage ? props.theme.colors.lightGreen : props.theme.colors.lightBlue} transparent;
+    margin-right: 12px;
+`;
+
+const MessageBody = styled(SectionPart) `
+    background-color: ${props => props.isMyMessage ? props.theme.colors.lightGreen : props.theme.colors.lightBlue};
+    font-size: ${props => props.theme.fontSizes[1]}px;
+    padding: ${props => props.theme.spaces[2]}px ${props => props.theme.spaces[3]}px;
+    margin: 0;
+    margin-${ props => props.isMyMessage ? 'right' : 'left'}: ${44 + 12}px;
+`;
+
+const Message = ({ m, userInfo }) => {
+    const isMyMessage = m.author === userInfo.username;
+    return (<Section flexDirection="column" flexWrap="wrap">
+        <UsernameSectionPart w={1}>
+            {!isMyMessage && <Flex alignItems="flex-start" justifyContent="space-between">
+                <Flex>
+                    <Flex alignItems="flex-end">
+                        <UserInitials isMyMessage={false} isRead={m.isRead}>
+                            {getAuthorInitials(m.author)}
+                        </UserInitials>
+                        <Triangle isMyMessage={false} />
+                    </Flex>
+                    <UsernameLabel>{m.author}</UsernameLabel>
+                </Flex>
+                <DateView >
+                    {dateToString(new Date(m.createdAt))}
+                </DateView>
+            </Flex>}
+            {isMyMessage && <Flex alignItems="flex-start" justifyContent="space-between">
+                <DateView >
+                    {dateToString(new Date(m.createdAt))}
+                </DateView>
+                <Flex>
+                    <UsernameLabel>{m.author}</UsernameLabel>
+                    <Flex alignItems="flex-end">
+                        <ReverseTriangle isMyMessage={true} />
+                        <UserInitials isMyMessage={true} isRead={true}>
+                            {getAuthorInitials(m.author)}
+                        </UserInitials>
+                    </Flex>
+                </Flex>
+            </Flex>}
+        </UsernameSectionPart>
+        <MessageBody isMyMessage={isMyMessage}>
+            {m.body}
+        </MessageBody>
+    </Section>
     );
+}
+
+const ScrollToBottom = styled.button`
+    cursor: pointer;
+    position: fixed;
+    right: 50px;
+    bottom: 100px;
+    width: 32px;
+    height: 32px;
+    background-color: ${props => props.theme.colors.white};
+    border: 1px solid ${props => props.theme.colors.white};
+    border-radius: 100px;
+    box-shadow: 0 2px 7px 1px rgba(0,114,255,0.5);
+    outline: none;
+    z-index: 10;
+
+    &:hover {
+        box-shadow: 0 2px 7px 1px rgba(0, 114, 255, 1);
+    }
+
+    &:active {
+        opacity: 0.5;
+    }
+
+    svg {
+        color: ${props => props.theme.colors.blue};
+    }
+`;
+
+class MessagesContainer extends React.Component {
+    scrollToBottom = () => {
+        const inputForm = ReactDOM.findDOMNode(this.inputForm)
+        window.scrollTo(0, inputForm.offsetTop - inputForm.clientHeight);
+    }
+    render() {
+        const {
+            advert,
+            userInfo,
+
+            messages,
+            messagesToShow,
+            selectedAuthor,
+
+            messageText,
+            onChange,
+
+            sendMessage,
+            backToUsers,
+
+            showAllMessages,
+            allMessagesVisible, } = this.props;
+
+        return (
+            <div>
+                {selectedAuthor
+                    && <Author
+                        backToUsers={backToUsers}
+                        selectedAuthor={selectedAuthor}
+
+                        messages={messages}
+                        userInfo={userInfo}
+
+                        showAllMessages={showAllMessages}
+                        allMessagesVisible={allMessagesVisible} />}
+                {messagesToShow.map((m, i) => (<Message key={i} m={m} userInfo={userInfo} />))}
+                <div
+                    ref={e => { this.inputForm = e; }}>
+                    <MessagesInputForm
+                        onChange={onChange}
+                        messageText={messageText}
+                        sendMessage={sendMessage} />
+                </div>
+                <ScrollToBottom onClick={this.scrollToBottom}>
+                    <Icon name={IconMap.AngleDown} />
+                </ScrollToBottom>
+            </div>
+        );
+    }
+}
 
 const UserSection = styled(Section) `
+    border-top: 1px solid ${props => props.theme.colors.separator};
+    padding: ${props => props.theme.spaces[4]}px 0px;
     cursor: pointer;
+    &:last-child {
+        border-bottom: 1px solid ${props => props.theme.colors.separator};
+    }
 `;
+
+const getTotalNewMessages = (authors, userInfo) => {
+    return authors.filter(a => a.author !== userInfo.username).reduce((acc, a) => (acc + a.newMessages), 0);
+};
+
+const getTotalMessages = (authors, userInfo) => {
+    return authors.reduce((acc, a) => (acc + a.totalMessages), 0);
+};
+
+const Focused = styled.div`
+    color: ${props => props.theme.colors.blue};
+`;
+
+const MessageText = styled.div`
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    margin:0;
+    font-size: ${props => props.theme.fontSizes[1]}px;
+`;
+
+const ArrowIcon = styled(Box) `
+    svg {
+        color: ${props => props.theme.colors.blue};
+    }
+`;
+
+const MessageInner = styled(Flex) `
+    flex-grow: 1;
+    overflow: hidden;
+`;
+
+const USER_INITIAL_COLORS = [
+    '#5CC5E6',
+    '#C681D5',
+    '#FDAE70',
+];
 
 const UsersList = ({ authors, selectAuthor, userInfo }) => (
     <div>
+        <Flex justifyContent="space-between" mb={4}>
+            <Heading>Messages</Heading>
+            <MessagesInfo>
+                <Icon name={IconMap.Envelope} />
+                <NewMessagesInfo> {getTotalNewMessages(authors, userInfo)} new </NewMessagesInfo> / {getTotalMessages(authors, userInfo)}
+            </MessagesInfo>
+        </Flex>
         {authors.filter(a => a.author !== userInfo.username)
             .map((a, i) => (
                 <UserSection
                     key={i}
-                    flexDirection="row"
-                    flexWrap="wrap"
+                    alignItems="center"
+                    flexWrap="nowrap"
                     onClick={() => selectAuthor(a.author)}>
-                    <SectionPart w={1}>
-                        <Icon name={IconMap.Envelope} />
-                        {a.newMessages} new / {a.totalMessages} messages
-                    </SectionPart>
-                    <UsernameSectionPart w={1} isRead={true}>
-                        From <strong> {a.author} </strong>
-                    </UsernameSectionPart>
-                    <DateView w={1}>
-                        Last message on {dateToString(new Date(a.lastMessageTime))}
-                    </DateView>
+                    <UserInitials
+                        isRead={a.newMessages === 0}
+                        color={USER_INITIAL_COLORS[i % USER_INITIAL_COLORS.length]}>
+                        {getAuthorInitials(a.author)}
+                    </UserInitials>
+                    <MessageInner flexDirection="column" px={2} justifyContent="space-between">
+                        <Flex justifyContent="space-between">
+                            <Focused> {a.author} </Focused>
+                            <Flex alignItems="center">
+                                <DateView >
+                                    {dateToString(new Date(a.lastMessageTime))}
+                                </DateView>
+                                <ArrowIcon ml={1}>
+                                    <Icon name={IconMap.AngleRight} />
+                                </ArrowIcon>
+                            </Flex>
+                        </Flex>
+                        <MessageText>
+                            {a.lastMessage}
+                        </MessageText>
+                    </MessageInner>
                 </UserSection>
             ))}
     </div>);
+
+const Container = styled.div`
+    width: 100%;
+`;
 
 export default connect(
     ({
@@ -161,6 +469,9 @@ export default connect(
     }
 )(
     class extends React.Component {
+        state = {
+            allMessagesVisible: false,
+        }
         async componentDidMount() {
             const { setMessagesState, getMessages, advert, userInfo, getMessagesAuthors, markMessageAsRead } = this.props;
 
@@ -169,10 +480,24 @@ export default connect(
                 getMessagesAuthors(advert.id);
             } else {
                 const messages = await getMessages(advert.id, userInfo.username);
-                messages
-                    .filter(m => !m.isRead && m.author !== userInfo.username)
-                    .forEach(m => markMessageAsRead(m.id));
+
+                this.readMessages(messages);
             }
+        }
+        readMessages = messages => {
+            const { userInfo, markMessageAsRead } = this.props;
+            if (messages.length <= 5) {
+                this.showAllMessages();
+            }
+            messages
+                .filter(m => !m.isRead && m.author !== userInfo.username)
+                .forEach(m => markMessageAsRead(m.id));
+        }
+        showAllMessages = () => {
+            this.setState({ ...this.state, allMessagesVisible: true });
+        }
+        hideMessages = () => {
+            this.setState({ ...this.state, allMessagesVisible: false });
         }
         sendMessage = () => {
             const {
@@ -193,9 +518,7 @@ export default connect(
             const messages = await this.props.getMessages(this.props.advert.id, author);
             this.props.selectAuthor(author);
 
-            messages
-                .filter(m => !m.isRead && m.author !== this.props.userInfo.username)
-                .forEach(m => this.props.markMessageAsRead(m.id));
+            this.readMessages(messages);
         }
         reply = () => {
             const {
@@ -214,6 +537,7 @@ export default connect(
             postMessage(message);
         }
         backToUsers = () => {
+            this.hideMessages();
             this.props.selectAuthor(null);
             this.props.setMessagesState(messageStates.users);
         }
@@ -229,8 +553,12 @@ export default connect(
 
             const state = messages.state || (userInfo.username === advert.author ? messageStates.users : messageStates.messages)
 
+            const messagesToShow = this.state.allMessagesVisible
+                ? messages.messages
+                : messages.messages.slice(Math.max(messages.messages.length - 5, 0));
+
             return (
-                <div>
+                <Container>
                     {state === messageStates.messages
                         && <MessagesContainer
                             advert={advert}
@@ -238,15 +566,18 @@ export default connect(
                             onChange={setMessageText}
                             selectedAuthor={messages.selectedAuthor}
                             messages={messages.messages}
+                            messagesToShow={messagesToShow}
                             messageText={messages.messageText}
                             backToUsers={this.backToUsers}
-                            sendMessage={messages.selectedAuthor ? this.reply : this.sendMessage} />}
+                            sendMessage={messages.selectedAuthor ? this.reply : this.sendMessage}
+                            showAllMessages={this.showAllMessages}
+                            allMessagesVisible={this.state.allMessagesVisible} />}
                     {state === messageStates.users
                         && <UsersList
                             authors={messages.authors}
                             userInfo={userInfo}
                             selectAuthor={this.selectAuthor} />}
-                </div>
+                </Container>
             );
         }
     })

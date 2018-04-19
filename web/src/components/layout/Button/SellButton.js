@@ -3,17 +3,29 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { push } from 'react-router-redux'
-import Btn from './Button';
 
-const Button = styled(Btn) `
-    color: ${props => props.theme.colors.sellBlue};
-`
-const SellButton = ({ push }) => {
-    return <Button text={'Post a seller advert'} onClick={() => push('postings/sell')} primary />
+import Button from './PrimaryButton';
+
+const Btn = styled(Button)`
+    font-family: ${props => props.theme.fontLight };
+`;
+
+const SellButton = ({ push, text, className }) => (
+    <Btn
+        text={text}
+        className={className}
+        onClick={() => push('postings/sell')}
+    />
+);
+
+SellButton.defaultProps = {
+    text: 'Post a seller advert',
 };
 
 SellButton.propTypes = {
-    push: PropTypes.func,
+    push: PropTypes.func.isRequired,
+    text: PropTypes.string,
+    className: PropTypes.string,
 };
 
 export default connect(null, { push })(SellButton);

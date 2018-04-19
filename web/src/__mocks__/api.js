@@ -57,3 +57,7 @@ export const getAdvertMessagesAuthorsOk = messagesAuthorsStub => advertId => new
 export const updateAdvertMessageOk = messageStub => (messageId, message) => new Promise((resolve, reject) => { resolve({ data: messageStub }) });
 
 export const getAdvertsForDashboardOk = (advertsStub) => () => new Promise((resolve, reject) => resolve({ data: advertsStub }));
+
+export const deleteAdvertOk = advertId => new Promise((resolve, reject) => resolve({ data: {} }));
+
+export const extendExpirationDateOk = advertId => new Promise((resolve, reject) => resolve({ data: {} }));

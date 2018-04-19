@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/sirupsen/logrus"
 	"github.com/skycoin/getsky.org/src/errors"
@@ -70,7 +71,8 @@ func JSONHandler(h http.HandlerFunc) http.HandlerFunc {
 // AcceptJSONHandler wraps Handler and declines requests with not supported content-type
 func AcceptJSONHandler(h http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		if (r.Method == "POST" || r.Method == "PUT") && r.Header.Get("Content-Type") != "application/json" {
+		contentType := r.Header.Get("Content-Type")
+		if (r.Method == "POST" || r.Method == "PUT") && !strings.Contains(contentType, "application/json") {
 			w.WriteHeader(http.StatusUnsupportedMediaType)
 			_, err := w.Write([]byte("Invalid content type, expected application/json"))
 			if err != nil {

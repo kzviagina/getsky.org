@@ -24,6 +24,8 @@ services:
     environment:
       TRADE_MYSQL: "mysql:3306"
       RECAPTCHA_SECRET: ${RECAPTCHA_SECRET}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
     volumes:
       - ./cmd:/usr/local/go/src/github.com/skycoin/getsky.org/cmd
       - ./db:/usr/local/go/src/github.com/skycoin/getsky.org/db

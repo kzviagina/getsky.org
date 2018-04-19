@@ -2,47 +2,51 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { Flex } from 'grid-styled';
 
-import Container from '../Container';
-import Brand from '../Brand';
-import Nav from '../Nav';
-import SocialMenu from '../SocialLinks';
-import UserSubmenu from '../UserSubmenu';
-import SkyPrice from '../SkyPrice';
+import Container from 'components/layout/Container';
+import Brand from 'components/layout/Brand';
+import Nav from 'components/layout/Nav';
+import UserSubmenu from 'components/layout/UserSubmenu';
+import SkyPrice from 'components/layout/SkyPrice';
+import theme from 'components/theme';
 
 import { logout } from 'components/routes/Login/actions';
 
-const SubHeaderWrapper = styled.div`
-    background: ${props => props.theme.colors.white};
+const SubHeaderWrapper = styled(Flex) `
+    background: ${props => props.theme.colors.darkBlue};
+    height: 38px;
 `;
 
-const HeaderWrapper = styled.div`
-    background: ${props => props.theme.colors.black};
+const HeaderWrapper = styled(Flex) `
+    height: 102px;
 `;
 
 const noAuthNavItems = [
-    { url: '/', name: 'Home' },
-    { url: '/search', name: 'Search' },
-    { url: '/register', name: 'Register' },
-    { url: '/login', name: 'Login' },
+    { url: '/search', name: 'Search', border: false },
+    { url: '/contact-us', name: 'Contact', border: false },
+    { url: '/register', name: 'Sign Up', border: false },
+    { url: '/login', name: 'Log In', border: true },
 ];
 
 const authNavItems = [
-    { url: '/', name: 'Home' },
-    { url: '/search', name: 'Search' },
+    { url: '/search', name: 'Search', border: false },
+    { url: '/contact-us', name: 'Contact', border: false },
 ];
 
-const Header = ({ authorized, userInfo, skyPrices, currencies, logout }) => (
-    <header>
-        <SubHeaderWrapper className="subheader">
-            <Container alignItems="center" justifyContent={'space-between'}>
+const HomePageStyle = { position: 'absolute', width: '100%' };
+const OtherPagesStyle = { backgroundColor: theme.colors.black };
+
+const Header = ({ authorized, userInfo, skyPrices, currencies, location, logout }) => (
+    <header style={{ overflow: 'hidden' }}>
+        <SubHeaderWrapper>
+            <Container alignItems={'center'} justifyContent={'space-between'}>
+                <SkyPrice skyPrices={skyPrices} />
                 {authorized && <UserSubmenu userInfo={userInfo} logout={logout} />}
-                <SkyPrice currencies={currencies} skyPrices={skyPrices} defaultCurrency={userInfo && userInfo.currency} />
-                <SocialMenu />
             </Container>
         </SubHeaderWrapper>
-        <HeaderWrapper className="header">
-            <Container alignItems="center" justifyContent="space-between" py={3}>
+        <HeaderWrapper alignItems={'center'} justifyContent={'space-between'} style={location === '/' ? HomePageStyle : OtherPagesStyle}>
+            <Container alignItems={'center'} justifyContent={'space-between'}>
                 <Brand />
                 <Nav navItems={authorized ? authNavItems : noAuthNavItems} />
             </Container>
@@ -54,8 +58,9 @@ Header.propTypes = {
     authorized: PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = ({ login, app, }) => {
+const mapStateToProps = ({ login, app, routing }) => {
     return {
+        location: routing.location.pathname,
         authorized: login.authorized,
         userInfo: app.userInfo,
         skyPrices: app.skyPrices,
