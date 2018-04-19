@@ -8,11 +8,11 @@ import (
 	"strings"
 	"testing"
 
-	tradedb "github.com/AlexSugak/getsky-trade/db"
-	"github.com/AlexSugak/getsky-trade/src/mail"
-	"github.com/AlexSugak/getsky-trade/src/util/logger"
-	"github.com/AlexSugak/getsky-trade/src/util/test"
 	"github.com/jmoiron/sqlx"
+	tradedb "github.com/skycoin/getsky.org/db"
+	"github.com/skycoin/getsky.org/src/mail"
+	"github.com/skycoin/getsky.org/src/util/logger"
+	"github.com/skycoin/getsky.org/src/util/test"
 	"github.com/stretchr/testify/require"
 	validator "gopkg.in/go-playground/validator.v9"
 )

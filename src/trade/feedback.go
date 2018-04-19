@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"net/http"
 
-	ce "github.com/AlexSugak/getsky-trade/src/errors"
-	"github.com/AlexSugak/getsky-trade/src/mail"
-	"github.com/AlexSugak/getsky-trade/src/util/httputil"
+	ce "github.com/skycoin/getsky.org/src/errors"
+	"github.com/skycoin/getsky.org/src/mail"
+	"github.com/skycoin/getsky.org/src/util/httputil"
 	validator "gopkg.in/go-playground/validator.v9"
 )
 
