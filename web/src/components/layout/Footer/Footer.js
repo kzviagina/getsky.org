@@ -29,13 +29,13 @@ export default () => (
         <Promo />
         <Background>
             <LinksContainer justifyContent={'space-between'}>
-                <Link path={''} text={'Home'} />
-                <Link path={''} text={'Why Scycoin'} />
-                <Link path={''} text={'Search'} />
-                <Link path={''} text={'FAQ'} />
-                <Link path={''} text={'Contact'} />
-                <Link path={''} text={'Privacy'} />
-                <Link path={''} text={'Terms'} />
+                <Link path={'/'} text={'Home'} />
+                <Link path={'/why-skycoin'} text={'Why Skycoin'} />
+                <Link path={'/search'} text={'Search'} />
+                <Link path={'/faq'} text={'FAQ'} />
+                <Link path={'/contact-us'} text={'Contact'} />
+                <Link path={'/privacy'} text={'Privacy'} />
+                <Link path={'/terms'} text={'Terms'} />
             </LinksContainer>
             <Container justifyContent={'center'} my={'76px'}>
                 <Brand />

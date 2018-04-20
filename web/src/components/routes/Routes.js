@@ -16,6 +16,13 @@ import Dashboard from './Dashboard';
 import EditPosting from './EditPosting';
 import ContactUs from './ContactUs';
 
+import {
+    Terms,
+    Privacy,
+    FAQ,
+    WhySkycoin,
+} from './Content';
+
 const PrivateRoute = connect(({ login }) => ({
     login
 }), null)(({ login, ...props }) => {
@@ -32,6 +39,11 @@ const Routes = ({ match }) => {
             <Route path={`/login`} component={Login} />
             <Route path={`/post/:id`} component={AdvertDetails} />
             <Route path={`/contact-us`} component={ContactUs} />
+
+            <Route path={`/why-skycoin`} component={WhySkycoin} />
+            <Route path={`/faq`} component={FAQ} />
+            <Route path={`/terms`} component={Terms} />
+            <Route path={`/privacy`} component={Privacy} />
 
             <PrivateRoute path={`/dashboard`} component={Dashboard} />
             <PrivateRoute path={`/user-settings`} component={UserSettings} />
