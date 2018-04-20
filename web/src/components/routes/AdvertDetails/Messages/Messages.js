@@ -314,7 +314,6 @@ class MessagesContainer extends React.Component {
     }
     render() {
         const {
-            advert,
             userInfo,
 
             messages,
@@ -473,7 +472,7 @@ export default connect(
             allMessagesVisible: false,
         }
         async componentDidMount() {
-            const { setMessagesState, getMessages, advert, userInfo, getMessagesAuthors, markMessageAsRead } = this.props;
+            const { setMessagesState, getMessages, advert, userInfo, getMessagesAuthors } = this.props;
 
             setMessagesState(null);
             if (userInfo.username === advert.author) {

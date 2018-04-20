@@ -27,7 +27,6 @@ export default class extends React.Component {
     }
     state = {
         visible: false,
-        global: false,
     }
     componentDidMount() {
         document.addEventListener('touchend', this.hideExpander, true)
@@ -38,12 +37,12 @@ export default class extends React.Component {
         document.removeEventListener('click', this.hideExpander, true)
     }
     hideExpander = () => {
-        this.setState({ ...this.state, visible: false, global: this.state.visible });
+        if (this.state.visible) {
+            this.setState({ ...this.state, visible: false });
+        }
     }
     toggleExpander = visible => {
-        if (!this.state.global) {
-            this.setState({ ...this.state, visible, global: false, });
-        }
+        this.setState({ ...this.state, visible, });
     }
     render() {
         const { visible } = this.state;
