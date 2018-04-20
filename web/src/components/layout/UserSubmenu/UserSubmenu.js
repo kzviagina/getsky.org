@@ -26,6 +26,7 @@ const UserMenu = styled(Box) `
     position: absolute;
     z-index: 1000;
     margin-top: 11px;
+    margin-left: -70px;
     padding: 8px 0px;
     background-color: ${theme.colors.darkBlue};
 `;
