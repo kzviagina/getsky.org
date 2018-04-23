@@ -20,12 +20,16 @@ export const GET_COUNTRIES_RESPONSE = 'GET_COUNTRIES_RESPONSE';
 
 export const getCountries = () =>
     async dispatch => {
-        const countries = await getCountriesRequest();
+        try {
+            const countries = await getCountriesRequest().catch(e => { });
 
-        dispatch({
-            type: GET_COUNTRIES_RESPONSE,
-            countries: countries.data,
-        });
+            dispatch({
+                type: GET_COUNTRIES_RESPONSE,
+                countries: countries.data,
+            });
+        } catch (e) {
+            console.log(e.message);
+        }
     };
 
 export const GET_STATES_RESPONSE = 'GET_STATES_RESPONSE';
@@ -42,8 +46,12 @@ export const getStates = () =>
 
 export const GET_USER_INFO_RESPONSE = 'GET_USER_INFO_RESPONSE';
 export const getUserInfo = () => async dispatch => {
-    const response = await getUserInfoApi();
-    dispatch({ type: GET_USER_INFO_RESPONSE, userInfo: response.data });
+    try {
+        const response = await getUserInfoApi();
+        dispatch({ type: GET_USER_INFO_RESPONSE, userInfo: response.data });
+    } catch (e) {
+        console.log(e.message);
+    }
 };
 
 export const SKYCOIN_PRICE_REQUEST = 'SKYCOIN_PRICE_REQUEST';
@@ -51,9 +59,13 @@ export const SKYCOIN_PRICE_RESPONSE = 'SKYCOIN_PRICE_RESPONSE';
 
 export const requestSkycoinPrice = currency =>
     async dispatch => {
-        dispatch({ type: SKYCOIN_PRICE_REQUEST });
-        const currencyFieldName = `price_${currency.toLowerCase()}`;
+        try {
+            dispatch({ type: SKYCOIN_PRICE_REQUEST });
+            const currencyFieldName = `price_${currency.toLowerCase()}`;
 
-        const response = await getSkycoinPriceApi(currency);
-        dispatch({ type: SKYCOIN_PRICE_RESPONSE, currency, price: response.data[0][currencyFieldName] });
+            const response = await getSkycoinPriceApi(currency);
+            dispatch({ type: SKYCOIN_PRICE_RESPONSE, currency, price: response.data[0][currencyFieldName] });
+        } catch (e) {
+            console.log(e.message);
+        }
     };
