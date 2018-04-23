@@ -20,16 +20,12 @@ export const GET_COUNTRIES_RESPONSE = 'GET_COUNTRIES_RESPONSE';
 
 export const getCountries = () =>
     async dispatch => {
-        try {
-            const countries = await getCountriesRequest().catch(e => { });
+        const countries = await getCountriesRequest();
 
-            dispatch({
-                type: GET_COUNTRIES_RESPONSE,
-                countries: countries.data,
-            });
-        } catch (e) {
-            console.log(e.message);
-        }
+        dispatch({
+            type: GET_COUNTRIES_RESPONSE,
+            countries: countries.data,
+        });
     };
 
 export const GET_STATES_RESPONSE = 'GET_STATES_RESPONSE';
@@ -46,12 +42,8 @@ export const getStates = () =>
 
 export const GET_USER_INFO_RESPONSE = 'GET_USER_INFO_RESPONSE';
 export const getUserInfo = () => async dispatch => {
-    try {
-        const response = await getUserInfoApi();
-        dispatch({ type: GET_USER_INFO_RESPONSE, userInfo: response.data });
-    } catch (e) {
-        console.log(e.message);
-    }
+    const response = await getUserInfoApi();
+    dispatch({ type: GET_USER_INFO_RESPONSE, userInfo: response.data });
 };
 
 export const SKYCOIN_PRICE_REQUEST = 'SKYCOIN_PRICE_REQUEST';
@@ -59,13 +51,9 @@ export const SKYCOIN_PRICE_RESPONSE = 'SKYCOIN_PRICE_RESPONSE';
 
 export const requestSkycoinPrice = currency =>
     async dispatch => {
-        try {
-            dispatch({ type: SKYCOIN_PRICE_REQUEST });
-            const currencyFieldName = `price_${currency.toLowerCase()}`;
+        dispatch({ type: SKYCOIN_PRICE_REQUEST });
+        const currencyFieldName = `price_${currency.toLowerCase()}`;
 
-            const response = await getSkycoinPriceApi(currency);
-            dispatch({ type: SKYCOIN_PRICE_RESPONSE, currency, price: response.data[0][currencyFieldName] });
-        } catch (e) {
-            console.log(e.message);
-        }
+        const response = await getSkycoinPriceApi(currency);
+        dispatch({ type: SKYCOIN_PRICE_RESPONSE, currency, price: response.data[0][currencyFieldName] });
     };
