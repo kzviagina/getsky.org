@@ -170,7 +170,7 @@ const Author = ({ backToUsers, selectedAuthor, messages, userInfo, allMessagesVi
 const getAuthorInitials = author => {
     const words = author.split(' ');
     if (words.length >= 2) {
-        return `${words[0]}${words[1]}`.toUpperCase();
+        return `${words[0][0]}${words[1][0]}`.toUpperCase();
     }
     return author[0].toString().toUpperCase();
 };
