@@ -5,7 +5,7 @@ import { Flex, Box } from 'grid-styled';
 import Container from 'components/layout/Container';
 import { H2 } from 'components/layout/Text';
 import { SellButton, BuyButton } from 'components/layout/Button';
-import bg from './bg.png';
+import bg from './bg.jpg';
 
 const SellBtn = styled(SellButton) `
     width: 280px;
