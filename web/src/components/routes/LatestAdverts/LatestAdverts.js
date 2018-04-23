@@ -11,7 +11,7 @@ import Spinner from 'components/layout/Spinner';
 
 import { Tab, Tabs, TabList, TabPanel } from './Tabs';
 import { getAdverts } from './actions';
-import bgImage from './intro-bg.png';
+import bgImage from './intro-bg.jpg';
 
 const Intro = styled.div`
     background: ${props => props.theme.colors.black} url(${bgImage}) 50% 20% no-repeat;
