@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { push } from 'react-router-redux';
-import qs from 'query-string';
+import qs from 'qs';
 import _ from 'lodash';
 import styled from 'styled-components';
 import Container from 'components/layout/Container';
@@ -78,7 +78,7 @@ class SearchAdverts extends React.Component {
     }
     componentDidMount() {
         const { location } = this.props;
-        const filters = qs.parse(location.search);
+        const filters = qs.parse(location.search.replace('?', ''));
 
         if (!_.isEmpty(filters)) {
             this.props.setFilters(filters);
@@ -89,7 +89,7 @@ class SearchAdverts extends React.Component {
         const filters = _.pickBy(_.merge(previousValues, values), el => !!el);
         const queryString = qs.stringify(filters);
         dispatch(push({
-            search: queryString
+            search: `?${queryString}`
         }));
     };
 

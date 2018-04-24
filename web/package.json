@@ -17,7 +17,6 @@
     "polished": "^1.9.2",
     "prop-types": "^15.6.0",
     "qs": "^6.5.1",
-    "query-string": "^6.0.0",
     "react": "^16.2.0",
     "react-async-script": "^0.9.1",
     "react-dom": "^16.2.0",
