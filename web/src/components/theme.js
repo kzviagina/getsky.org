@@ -19,13 +19,14 @@ export default {
 
         separator: '#E1E3E6',
         lightOrange: '#FDAE70',
-        
-        lightPink:'#C681D5',
+
+        lightPink: '#C681D5',
         red: '#EB5A6B',
         gray: '#424242',
         warning: '#ff6a00',
         warningLight: '#ffb887',
-        success: '#00ff40',
+        warningTransparent: 'rgba(245,166,35,0.25)',
+        success: '#DDF6EE',
     },
     fontSizes: [12, 14, 16, 18, 25, 35],
     spaces: [5, 10, 15, 20, 25, 30, 35, 40, 50],

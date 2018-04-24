@@ -6,7 +6,7 @@ import { Box } from 'grid-styled';
 import Container from 'components/layout/Container';
 import { H2 } from 'components/layout/Text';
 import { Button } from 'components/layout/Button';
-import { FormInput, FormCaptcha } from '../../layout/Form';
+import { FormInput, FormCaptcha, FormMessage } from 'components/layout/Form';
 
 import { required } from 'validation/rules';
 
@@ -45,17 +45,24 @@ const ForgotPasswordForm = reduxForm({
 })
 
 class ForgotPassword extends React.Component {
-    resetPassword = () => {
+    state = {
+        passwordBeenReset: false,
+    }
+    resetPassword = async () => {
         const { form, resetPassword } = this.props;
-        resetPassword(form.values.email, form.values.recaptcha);
+        await resetPassword(form.values.email, form.values.recaptcha);
+        this.setState({ passwordBeenReset: true });
     }
     render() {
         return (
             <Container flex='1 0 auto' flexDirection="column" py={4}>
                 <H2>Forgot your password?</H2>
-                <p>
+                {this.state.passwordBeenReset && <FormMessage color="success">
+                    If that was a valid email address, an email has been sent to you. Please check your email (including your Spam box) for further instructions.
+                </FormMessage>}
+                {!this.state.passwordBeenReset && <FormMessage color="warningTransparent">
                     If you entered an email address in your settings page, complete this form with that email address. We'll then send an email with further information.
-                </p>
+                </FormMessage>}
 
                 <ForgotPasswordForm onSubmit={this.resetPassword} />
 

@@ -7,7 +7,7 @@ import queryString from 'query-string';
 import Container from 'components/layout/Container';
 import { H2 } from 'components/layout/Text';
 import { Button } from 'components/layout/Button';
-import { FormInput } from '../../layout/Form';
+import { FormInput, FormMessage } from 'components/layout/Form';
 
 import { required, minLength, } from 'validation/rules';
 
@@ -20,13 +20,6 @@ const passwordsMatch = (value, allValues) => allValues.password && value !== all
 const ResetPasswordForm = reduxForm({
     form: 'resetPasswordForm',
 })(class extends React.Component {
-    componentDidUpdate(prevProps, prevState) {
-        // Reset captcha after receiving response
-        if (prevProps.submitting && prevProps.submitting !== this.props.submitting) {
-            const cptCmp = this.recaptchaField.getRenderedComponent();
-            cptCmp.resetRecaptcha();
-        }
-    }
     render() {
         const {
             handleSubmit,
@@ -67,19 +60,25 @@ const ResetPasswordForm = reduxForm({
 class ResetPassword extends React.Component {
     state = {
         code: null,
+        passwordBeenReset: false,
     }
     componentWillReceiveProps(newProps) {
         const { code } = queryString.parse(this.props.location.search);
         this.setState({ code });
     }
-    resetPassword = () => {
+    resetPassword = async () => {
         const { form, saveNewPassword, } = this.props;
-        saveNewPassword(form.values.password, this.state.code);
+        await saveNewPassword(form.values.password, this.state.code);
+        this.setState({ ...this.state, passwordBeenReset: true, });
     }
     render() {
         return (
             <Container flex='1 0 auto' flexDirection="column" py={4}>
                 <H2>Resetting the password</H2>
+
+                {this.state.passwordBeenReset && <FormMessage color="success">
+                    New password has been applied.
+                </FormMessage>}
 
                 <ResetPasswordForm onSubmit={this.resetPassword} />
 
