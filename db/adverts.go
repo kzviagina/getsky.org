@@ -445,6 +445,11 @@ func (s Storage) SearchAdverts(f models.SearchAdvertsFilter, t board.AdvertType,
 		`ORDER BY a.CreatedAt`
 
 	nstmt, err := s.DB.PrepareNamed(cmd)
+
+	if err != nil {
+		return nil, err
+	}
+
 	err = nstmt.Select(&adverts, f)
 
 	if err != nil {
