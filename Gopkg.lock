@@ -53,6 +53,12 @@
   version = "v1.6.1"
 
 [[projects]]
+  name = "github.com/gorilla/schema"
+  packages = ["."]
+  revision = "d0e4c24cff97ae983e9847e0ed5a02dc10013d41"
+  version = "v1.0.2"
+
+[[projects]]
   name = "github.com/gz-c/logrus-prefixed-formatter"
   packages = ["."]
   revision = "3f60c5b6f7ebd01d3bbda8ccc53c7bebd881caee"
@@ -166,6 +172,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "e698b7ce20fdb7ad9ba828d5558c7dd7df2d1d4d002385542fb8e635170646e0"
+  inputs-digest = "fa435af765abb9bf29c55cdc39418edbda47e5cd377d2f490c2364efbeaf35bb"
   solver-name = "gps-cdcl"
   solver-version = 1
