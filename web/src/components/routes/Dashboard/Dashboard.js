@@ -17,6 +17,8 @@ const lengthOrZero = collection => collection ? collection.length : 0;
 const sellColumns = [{ name: 'Messages', style: { width: '100px' } }, ...sellAdvertsColumns];
 const buyColumns = [{ name: 'Messages', style: { width: '100px' } }, ...buyAdvertsColumns];
 
+const mapAdverts = (adverts, prices) => adverts.map(a => ({ ...a, price: prices['USD'] }));
+
 class Dashboard extends React.Component {
     state = {
         extendConfirmationVisible: false,
@@ -63,7 +65,8 @@ class Dashboard extends React.Component {
             sellEnquiries,
             newMessages,
             enquiriesToBuyers,
-            enquiriesToSellers
+            enquiriesToSellers,
+            skyPrices,
         } = this.props;
 
         return (
@@ -94,7 +97,7 @@ class Dashboard extends React.Component {
                         editAdvert: this.editAdvert,
                     }}
                     title={'Your buyer adverts'}
-                    adverts={buyAdverts}
+                    adverts={mapAdverts(buyAdverts, skyPrices)}
                     noAdvertsMessage={'You have no active buyer adverts.'}
                     columns={buyColumns}
                     rowComponent={AdvertRow}
@@ -107,7 +110,7 @@ class Dashboard extends React.Component {
                         editAdvert: this.editAdvert,
                     }}
                     title={'Your seller adverts'}
-                    adverts={sellAdverts}
+                    adverts={mapAdverts(sellAdverts, skyPrices)}
                     noAdvertsMessage={'You have no active seller adverts.'}
                     columns={sellColumns}
                     rowComponent={AdvertRow}
@@ -115,7 +118,7 @@ class Dashboard extends React.Component {
                 />
                 <AdvertsList
                     title={'Enquiries you\'ve made to buyers'}
-                    adverts={buyEnquiries}
+                    adverts={mapAdverts(buyEnquiries, skyPrices)}
                     noAdvertsMessage={'There are no active buyer adverts you have made enquiries to.'}
                     columns={buyColumns}
                     rowComponent={AdvertRow}
@@ -123,7 +126,7 @@ class Dashboard extends React.Component {
                 />
                 <AdvertsList
                     title={'Enquiries you\'ve made to sellers'}
-                    adverts={sellEnquiries}
+                    adverts={mapAdverts(sellEnquiries, skyPrices)}
                     noAdvertsMessage={'There are no active seller adverts you have made enquiries to.'}
                     columns={sellColumns}
                     rowComponent={AdvertRow}
@@ -136,6 +139,7 @@ class Dashboard extends React.Component {
 
 const mapStateToProps = ({ app, dashboard }) => ({
     userName: app.userInfo ? app.userInfo.username : '',
+    skyPrices: app.skyPrices,
     buyAdverts: dashboard.buyAdverts,
     sellAdverts: dashboard.sellAdverts,
     buyEnquiries: dashboard.buyEnquiries,

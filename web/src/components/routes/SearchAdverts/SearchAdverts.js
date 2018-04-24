@@ -28,7 +28,7 @@ const sellAdvertsColumns = [
     { name: 'Expired', style: { width: '170px' } },
 ];
 
-const BreadcrumbLink = styled(Link)`
+const BreadcrumbLink = styled(Link) `
     font-size: 12px;
     color: ${props => props.theme.colors.grayBlue};
 `;
@@ -72,6 +72,8 @@ const Badge = styled.span`
     vertical-align: top;
 `;
 
+const mapAdverts = (adverts, prices) => adverts.map(a => ({ ...a, price: prices['USD'] }));
+
 class SearchAdverts extends React.Component {
     componentWillMount() {
         this.props.searchAdverts('');
@@ -107,7 +109,7 @@ class SearchAdverts extends React.Component {
     };
 
     render() {
-        const { countries, states, currencies, location, search: { buyAdverts, sellAdverts } } = this.props;
+        const { countries, states, currencies, location, search: { buyAdverts, sellAdverts }, skyPrices } = this.props;
         return (
             <div>
                 <Container flex="1 0 auto" flexDirection="row" py={3}>
@@ -140,7 +142,7 @@ class SearchAdverts extends React.Component {
                                     Seller adverts
                                     {sellAdverts.length > 0 && <Badge>{sellAdverts.length}</Badge>}
                                 </Title>
-                                <Table columns={buyAdvertsColumns} rowComponent={AdvertRow} rowData={sellAdverts} />
+                                <Table columns={buyAdvertsColumns} rowComponent={AdvertRow} rowData={mapAdverts(sellAdverts, skyPrices)} />
                             </Container>
                         </TabPanel>
                         <TabPanel>
@@ -150,7 +152,7 @@ class SearchAdverts extends React.Component {
                                     Buyer adverts
                                     {buyAdverts.length > 0 && <Badge>{buyAdverts.length}</Badge>}
                                 </Title>
-                                <Table columns={sellAdvertsColumns} rowComponent={AdvertRow} rowData={buyAdverts} />
+                                <Table columns={sellAdvertsColumns} rowComponent={AdvertRow} rowData={mapAdverts(buyAdverts, skyPrices)} />
                             </Container>
                         </TabPanel>
                     </Tabs>
@@ -166,6 +168,7 @@ const mapStateToProps = (state) => ({
     currencies: state.app.currencies,
     states: state.app.states,
     search: state.search,
+    skyPrices: state.app.skyPrices,
 });
 
 export default connect(mapStateToProps, ({ searchAdverts, setFilters }))(SearchAdverts);

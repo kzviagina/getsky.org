@@ -53,6 +53,10 @@ class LatestAdverts extends React.Component {
     }
 
     render() {
+        const { skyPrices, buyAdverts, sellAdverts } = this.props;
+
+        const sellAdvertsWithPrice = sellAdverts.map(i => ({ ...i, price: skyPrices['USD'] }));
+        const buyAdvertsWithPrice = buyAdverts.map(i => ({ ...i, price: skyPrices['USD'] }));
         return (
             <Box>
                 <Intro className="intro">
@@ -69,13 +73,13 @@ class LatestAdverts extends React.Component {
                     <TabPanel>
                         <Container flex='1 0 auto' flexDirection="column" pt={'50px'}>
                             {this.props.loading && <Spinner />}
-                            <Table columns={buyAdvertsColumns} rowComponent={AdvertRow} rowData={this.props.sellAdverts} />
+                            <Table columns={buyAdvertsColumns} rowComponent={AdvertRow} rowData={sellAdvertsWithPrice} />
                         </Container>
                     </TabPanel>
                     <TabPanel>
                         <Container flex='1 0 auto' flexDirection="column" pt={'50px'}>
                             {this.props.loading && <Spinner />}
-                            <Table columns={sellAdvertsColumns} rowComponent={AdvertRow} rowData={this.props.buyAdverts} />
+                            <Table columns={sellAdvertsColumns} rowComponent={AdvertRow} rowData={buyAdvertsWithPrice} />
                         </Container>
                     </TabPanel>
                 </Tabs>
@@ -84,4 +88,5 @@ class LatestAdverts extends React.Component {
     }
 }
 
-export default connect(state => state.latestAdverts, ({ getAdverts }))(LatestAdverts);
+export default connect(({ latestAdverts, app: { skyPrices } }) => ({ ...latestAdverts, skyPrices }),
+    ({ getAdverts }))(LatestAdverts);

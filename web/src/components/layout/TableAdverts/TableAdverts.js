@@ -35,7 +35,9 @@ const LinkedTableRow = withRouter(({ ...props, href, history }) => (<TableRow {.
 
 const getFullAddress = advert => `${advert.countryCode}, ${advert.city} ${advert.stateCode || ''} ${advert.postalCode || ''}`;
 
-const getPrice = advert => `${advert.amountFrom} ${advert.amountTo ? `- ${advert.amountTo}` : ''} USD`;
+const getPrice = advert => `${advert.amountFrom} ${advert.amountTo ? `- ${advert.amountTo}` : ''} SKY`;
+
+const getConvertedPrice = advert => `${advert.amountFrom * (advert.fixedPrice || advert.price)} ${advert.amountTo ? `- ${advert.amountTo * (advert.fixedPrice || advert.price)}` : ''} USD`;
 
 const getTradeOptionsText = advert => {
     const advertOptions = pickBy(pick(advert, keys(TRADE_OPTIONS)), item => item);
@@ -55,7 +57,7 @@ export const AdvertRow = ({ data, rowOperations }) => {
                 <DoubleCell title={advert.author} body={getFullAddress(advert)} />
             </TableCell>
             <TableCell>
-                <DoubleCell title={getPrice(advert)} body={'Nothing'} />
+                <DoubleCell title={getPrice(advert)} body={getConvertedPrice(data)} />
             </TableCell>
             <TableCell>{getTradeOptionsText(advert)}</TableCell>
             <TableCell>
