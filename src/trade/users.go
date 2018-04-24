@@ -259,7 +259,7 @@ type resetPasswordRequest struct {
 // ResetPasswordRequestHandler generates a reset password code and sends it to the user's email
 // Method: POST
 // Accept: application/json
-// URI: /api/me/reset-password-request
+// URI: /api/reset-password-request
 func ResetPasswordRequestHandler(s *HTTPServer) httputil.APIHandler {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		body := &resetPasswordRequest{}
@@ -293,7 +293,7 @@ func ResetPasswordRequestHandler(s *HTTPServer) httputil.APIHandler {
 			return err
 		}
 
-		scheme := ""
+		var scheme string
 		if r.URL.Scheme == "" {
 			scheme = `http://`
 		} else {
@@ -320,7 +320,7 @@ type resetPassword struct {
 // ResetPasswordHandler applies a new password for the user
 // Method: POST
 // Accept: application/json
-// URI: /api/me/reset-password
+// URI: /api/reset-password
 func ResetPasswordHandler(s *HTTPServer) httputil.APIHandler {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		body := &resetPassword{}

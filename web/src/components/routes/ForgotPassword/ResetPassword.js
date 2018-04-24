@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Field, reduxForm, Form } from 'redux-form';
 import { Box } from 'grid-styled';
 import queryString from 'query-string';
@@ -9,6 +10,8 @@ import { Button } from 'components/layout/Button';
 import { FormInput } from '../../layout/Form';
 
 import { required, minLength, } from 'validation/rules';
+
+import { saveNewPassword } from './actions';
 
 const r = required();
 const minLength8 = minLength(8);
@@ -61,7 +64,7 @@ const ResetPasswordForm = reduxForm({
     }
 })
 
-export default class extends React.Component {
+class ResetPassword extends React.Component {
     state = {
         code: null,
     }
@@ -69,14 +72,24 @@ export default class extends React.Component {
         const { code } = queryString.parse(this.props.location.search);
         this.setState({ code });
     }
+    resetPassword = () => {
+        const { form, saveNewPassword, } = this.props;
+        saveNewPassword(form.values.password, this.state.code);
+    }
     render() {
         return (
             <Container flex='1 0 auto' flexDirection="column" py={4}>
                 <H2>Resetting the password</H2>
 
-                <ResetPasswordForm handleSubmit={() => { }} />
+                <ResetPasswordForm onSubmit={this.resetPassword} />
 
             </Container>
         );
     }
 }
+
+export default connect(({
+    form: { resetPasswordForm },
+}) => ({
+    form: resetPasswordForm
+}), { saveNewPassword })(ResetPassword);

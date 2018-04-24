@@ -140,7 +140,8 @@ func (s *HTTPServer) setupRouter(Secure Secure) http.Handler {
 	r.Handle("/api/me", Secure(API(MeHandler))).Methods("GET")
 	r.Handle("/api/me/settings", Secure(API(UpdateUserSettingsHandler))).Methods("POST")
 	r.Handle("/api/me/change-password", Secure(API(ChangePasswordHandler))).Methods("POST")
-	r.Handle("/api/me/reset-password-request", API(ResetPasswordRequestHandler)).Methods("POST")
+	r.Handle("/api/reset-password-request", API(ResetPasswordRequestHandler)).Methods("POST")
+	r.Handle("/api/reset-password", API(ResetPasswordHandler)).Methods("POST")
 
 	// NOTE: we should not use "adverts" word as part of api path since it can be blocked by AdBlock or similar browser extension
 	r.Handle("/api/postings/my", Secure(API(MyAdvertsHandler))).Methods("GET")

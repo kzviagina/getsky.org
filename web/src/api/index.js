@@ -80,3 +80,9 @@ export const extendExpirationDate = advertId =>
 
 export const sendFeedback = feedback =>
     axios.post(`${apiUrl}/feedback`, feedback, headers);
+
+export const resetPasswordRequest = requestForm =>
+    axios.post(`${apiUrl}/reset-password-request`, requestForm, headers);
+
+export const recoverPassword = recoverPasswordForm =>
+    axios.post(`${apiUrl}/reset-password`, recoverPasswordForm, headers);

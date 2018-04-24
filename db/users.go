@@ -22,7 +22,7 @@ func NewAuthenticator(db *sqlx.DB) Authenticator {
 // VerifyPassword tries to locate user in DB and check password against the hash stored in DB
 func (da Authenticator) VerifyPassword(userName string, password string) error {
 	user := models.User{}
-	err := da.DB.Get(&user, "SELECT * FROM Users u WHERE u.UserName = ?", userName)
+	err := da.DB.Get(&user, "SELECT Id, PasswordHash, UserName, Email, TimeOffset, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status, RegisteredAt FROM Users WHERE UserName = ?", userName)
 
 	if err != nil {
 		return fmt.Errorf("User not found, %s", err)
@@ -165,6 +165,19 @@ func (u Users) GenerateResetPasswordCode(email string) (string, error) {
 // ResetPasswordCode generates a new reset password code and saves it to the DB.
 func (u Users) ResetPasswordCode(code string, newPassword string) error {
 	user, err := u.GetByResetPasswordCode(code)
+	if err != nil {
+		return err
+	}
+
+	updateModel := &resetPasswordCodeUpdateModel{
+		Email:             user.Email,
+		ResetPasswordCode: "",
+	}
+
+	cmd := `UPDATE Users SET` +
+		`  ResetPasswordCode = :ResetPasswordCode` +
+		`  WHERE Email = :Email`
+	_, err = u.DB.NamedExec(cmd, updateModel)
 	if err != nil {
 		return err
 	}
