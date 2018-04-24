@@ -27,4 +27,4 @@ before_install:
 - sudo service mysql restart
 - sudo mysql --password=root -e 'CREATE DATABASE IF NOT EXISTS getskytrade;'
 after_success:
-- 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then sh .travis/deploy.sh; fi'
+- 'if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then sh .travis/deploy.sh; fi'
