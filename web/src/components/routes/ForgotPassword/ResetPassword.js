@@ -2,6 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm, Form } from 'redux-form';
 import { Box } from 'grid-styled';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 import qs from 'qs';
 
 import Container from 'components/layout/Container';
@@ -12,6 +14,16 @@ import { FormInput, FormMessage } from 'components/layout/Form';
 import { required, minLength, } from 'validation/rules';
 
 import { saveNewPassword } from './actions';
+
+const BackToLogin = styled(Link) `
+    display: block;
+    margin-top: ${props => props.theme.spaces[1]}px;
+    color: ${props => props.theme.colors.blue};
+
+    &:hover {
+        text-decoration: underline;
+    }
+`;
 
 const r = required();
 const minLength8 = minLength(8);
@@ -78,9 +90,10 @@ class ResetPassword extends React.Component {
 
                 {this.state.passwordBeenReset && <FormMessage color="success">
                     New password has been applied.
+                    <BackToLogin to="/login">Back to login</BackToLogin>
                 </FormMessage>}
 
-                <ResetPasswordForm onSubmit={this.resetPassword} />
+                {!this.state.passwordBeenReset && <ResetPasswordForm onSubmit={this.resetPassword} />}
 
             </Container>
         );
