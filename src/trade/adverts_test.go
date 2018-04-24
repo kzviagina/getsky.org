@@ -97,6 +97,85 @@ func TestAdverts(t *testing.T) {
 	}
 }
 
+func setupSearchAdvertsTests() func() {
+	userID := insertSQL(fmt.Sprintf("INSERT INTO `%s`.`Users` (UserName, Email, PasswordHash, TimeOffset, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status) VALUES ('bob', 'bob@bob.com', 'foo', 0, 'US', 'CA', 'Los Angeles', '', 'mi', 'USD', 1)", dbName))
+	execSQL("INSERT INTO `%s`.`Adverts` (Type, Author, AmountFrom, AmountTo, FixedPrice, PercentageAdjustment, Currency, AdditionalInfo, TravelDistance, TravelDistanceUoM, CountryCode, StateCode, City, PostalCode, Status, TradeCashInPerson, TradeCashByMail, TradeMoneyOrderByMail, TradeOther, CreatedAt, ExpiredAt) VALUES (1, %d, 100, null, null, null, 'EUR', '', 25, 'km', 'GR', null, 'Athens', '', 1, 1, 1, 1, 0, '2018-03-06', '2018-03-06')", dbName, userID)
+	execSQL("INSERT INTO `%s`.`Adverts` (Type, Author, AmountFrom, AmountTo, FixedPrice, PercentageAdjustment, Currency, AdditionalInfo, TravelDistance, TravelDistanceUoM, CountryCode, StateCode, City, PostalCode, Status, TradeCashInPerson, TradeCashByMail, TradeMoneyOrderByMail, TradeOther, CreatedAt, ExpiredAt) VALUES (1, %d, 100, 200, null, null, 'USD', '', 25, 'km', 'GR', null, 'Athens', '', 1, 1, 1, 1, 0, '2018-03-06', '2018-03-06')", dbName, userID)
+	execSQL("INSERT INTO `%s`.`Adverts` (Type, Author, AmountFrom, AmountTo, FixedPrice, PercentageAdjustment, Currency, AdditionalInfo, TravelDistance, TravelDistanceUoM, CountryCode, StateCode, City, PostalCode, Status, TradeCashInPerson, TradeCashByMail, TradeMoneyOrderByMail, TradeOther, CreatedAt, ExpiredAt) VALUES (2, %d, 100, 200, null, null, 'USD', '', 30, 'km', 'GR', null, 'Athens', '', 1, 1, 1, 1, 0, '2018-03-06', '2018-03-06')", dbName, userID)
+	execSQL("INSERT INTO `%s`.`Adverts` (Type, Author, AmountFrom, AmountTo, FixedPrice, PercentageAdjustment, Currency, AdditionalInfo, TravelDistance, TravelDistanceUoM, CountryCode, StateCode, City, PostalCode, Status, TradeCashInPerson, TradeCashByMail, TradeMoneyOrderByMail, TradeOther, CreatedAt, ExpiredAt) VALUES (2, %d, 300, 500, null, null, 'USD', '', 30, 'km', 'GR', null, 'Athens', '', 1, 0, 0, 1, 0, '2000-03-06', '2000-03-06')", dbName, userID)
+
+	return func() {
+		clearTables()
+	}
+}
+
+func TestSearchAdverts(t *testing.T) {
+	tests := []struct {
+		name           string
+		method         string
+		url            string
+		expectedBody   string
+		expectedStatus int
+	}{
+		{
+			name:           "should return all adverts which have type '1' (Sell type)",
+			method:         "GET",
+			url:            "/api/postings/sell/search",
+			expectedStatus: http.StatusOK,
+			expectedBody:   `[{"id":1,"type":1,"author":"bob","tradeCashInPerson":true,"tradeCashByMail":true,"tradeMoneyOrderByMail":true,"tradeOther":false,"amountFrom":"100","amountTo":null,"fixedPrice":null,"percentageAdjustment":null,"currency":"EUR","additionalInfo":"","travelDistance":25,"travelDistanceUoM":"km","countryCode":"GR","stateCode":null,"city":"Athens","postalCode":"","status":1,"createdAt":"2018-03-06T00:00:00Z","expiredAt":"2018-03-06T00:00:00Z"},{"id":2,"type":1,"author":"bob","tradeCashInPerson":true,"tradeCashByMail":true,"tradeMoneyOrderByMail":true,"tradeOther":false,"amountFrom":"100","amountTo":"200","fixedPrice":null,"percentageAdjustment":null,"currency":"USD","additionalInfo":"","travelDistance":25,"travelDistanceUoM":"km","countryCode":"GR","stateCode":null,"city":"Athens","postalCode":"","status":1,"createdAt":"2018-03-06T00:00:00Z","expiredAt":"2018-03-06T00:00:00Z"}]`,
+		},
+		{
+			name:           "should return adverts which have type '1' (Sell type) with filters (amount, currency, city, countryCode)",
+			method:         "GET",
+			url:            "/api/postings/sell/search?amount=150&currency=EUR&city=Athens&countryCode=GR",
+			expectedStatus: http.StatusOK,
+			expectedBody:   `[{"id":1,"type":1,"author":"bob","tradeCashInPerson":true,"tradeCashByMail":true,"tradeMoneyOrderByMail":true,"tradeOther":false,"amountFrom":"100","amountTo":null,"fixedPrice":null,"percentageAdjustment":null,"currency":"EUR","additionalInfo":"","travelDistance":25,"travelDistanceUoM":"km","countryCode":"GR","stateCode":null,"city":"Athens","postalCode":"","status":1,"createdAt":"2018-03-06T00:00:00Z","expiredAt":"2018-03-06T00:00:00Z"}]`,
+		},
+		{
+			name:           "should return all adverts which have type '2' (Buy type)",
+			method:         "GET",
+			url:            "/api/postings/buy/search",
+			expectedStatus: http.StatusOK,
+			expectedBody:   `[{"id":3,"type":2,"author":"bob","tradeCashInPerson":true,"tradeCashByMail":true,"tradeMoneyOrderByMail":true,"tradeOther":false,"amountFrom":"100","amountTo":"200","fixedPrice":null,"percentageAdjustment":null,"currency":"USD","additionalInfo":"","travelDistance":30,"travelDistanceUoM":"km","countryCode":"GR","stateCode":null,"city":"Athens","postalCode":"","status":1,"createdAt":"2018-03-06T00:00:00Z","expiredAt":"2018-03-06T00:00:00Z"}]`,
+		},
+		{
+			name:           "should return adverts which have type '2' (Buy type) with filters (trade options, amount, currency)",
+			method:         "GET",
+			url:            "/api/postings/buy/search?tradeMoneyOrderByMail=1&amount=200&currency=USD",
+			expectedStatus: http.StatusOK,
+			expectedBody:   `[{"id":3,"type":2,"author":"bob","tradeCashInPerson":true,"tradeCashByMail":true,"tradeMoneyOrderByMail":true,"tradeOther":false,"amountFrom":"100","amountTo":"200","fixedPrice":null,"percentageAdjustment":null,"currency":"USD","additionalInfo":"","travelDistance":30,"travelDistanceUoM":"km","countryCode":"GR","stateCode":null,"city":"Athens","postalCode":"","status":1,"createdAt":"2018-03-06T00:00:00Z","expiredAt":"2018-03-06T00:00:00Z"}]`,
+		},
+		{
+			name:           "should return empty array of adverts when there are no adverts that corresponds to filters",
+			method:         "GET",
+			url:            "/api/postings/buy/search?tradeMoneyOrderByMail=1&amount=200&currency=EUR",
+			expectedStatus: http.StatusOK,
+			expectedBody:   `[]`,
+		},
+	}
+
+	teardownTests := setupSearchAdvertsTests()
+	defer teardownTests()
+
+	for _, tc := range tests {
+		name := fmt.Sprintf("test case: SearchSellAdvertsHandler %s", tc.name)
+		req, err := http.NewRequest(tc.method, tc.url, nil)
+
+		require.NoError(t, err)
+
+		sql := sqlx.NewDb(db, "mysql")
+		s := tradedb.NewStorage(sql)
+		w := httptest.NewRecorder()
+		server := &HTTPServer{board: s}
+		server.serverTime = ServerTimeMock{}
+		handler := server.setupRouter(test.StubSecure)
+
+		handler.ServeHTTP(w, req)
+		require.Equal(t, tc.expectedStatus, w.Code, name)
+		require.Equal(t, tc.expectedBody, strings.TrimSuffix(w.Body.String(), "\n"), name)
+	}
+}
+
 func setupMyAdvertsTests() func() {
 	userID1 := insertSQL(fmt.Sprintf("INSERT INTO `%s`.`Users` (UserName, Email, PasswordHash, TimeOffset, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status) VALUES ('bob', 'bob@bob.com', 'foo', 0, 'US', 'CA', 'Los Angeles', '', 'mi', 'USD', 1)", dbName))
 	execSQL("INSERT INTO `%s`.`Adverts` (Type, Author, AmountFrom, AmountTo, FixedPrice, PercentageAdjustment, Currency, AdditionalInfo, TravelDistance, TravelDistanceUoM, CountryCode, StateCode, City, PostalCode, Status, TradeCashInPerson, TradeCashByMail, TradeMoneyOrderByMail, TradeOther, CreatedAt, ExpiredAt) VALUES (1, %d, 100.1, null, null, null, 'EUR', '', 25, 'km', 'GR', null, 'Athens', '', 1, 1, 1, 1, 0, '2018-03-06', '2018-03-06')", dbName, userID1)

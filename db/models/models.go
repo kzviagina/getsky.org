@@ -85,3 +85,16 @@ type MessageDetails struct {
 	CreatedAt time.Time      `db:"CreatedAt" json:"createdAt"`
 	Recipient JSONNullString `db:"Recipient" json:"recipient"`
 }
+
+// SearchAdvertsFilter represents available adverts filters
+type SearchAdvertsFilter struct {
+	TradeCashInPerson     bool   `db:"TradeCashInPerson"`
+	TradeCashByMail       bool   `db:"TradeCashByMail"`
+	TradeMoneyOrderByMail bool   `db:"TradeMoneyOrderByMail"`
+	TradeOther            bool   `db:"TradeOther"`
+	Amount                int32  `db:"Amount"`
+	Currency              string `db:"Currency"`
+	CountryCode           string `db:"CountryCode"`
+	StateCode             string `db:"StateCode"`
+	City                  string `db:"City"`
+}

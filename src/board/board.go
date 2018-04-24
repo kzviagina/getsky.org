@@ -26,4 +26,5 @@ type Board interface {
 	ExtendExperationTime(int64, time.Time) error
 	UpdateAdvert(advert *models.Advert) error
 	DeleteAdvert(advertID int64) error
+	SearchAdverts(models.SearchAdvertsFilter, AdvertType, time.Time) ([]models.AdvertDetails, error)
 }

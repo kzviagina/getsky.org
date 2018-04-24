@@ -8,9 +8,9 @@ import 'font-awesome/css/font-awesome.min.css';
 const CheckBoxInput = styled.input`
     font: normal normal normal 14px/1 FontAwesome;
     -webkit-appearance: none;
-    background-color: white;
+    background-color: transparent;
     color: black;
-    border: 1px solid black;
+    border: 1px solid ${props => props.theme.colors.grayBlue};
     padding: 10px;
     display: inline-block;
     position: relative;
@@ -21,32 +21,41 @@ const CheckBoxInput = styled.input`
     }
 
     &:active, &:focus {
-        border: 1px solid ${props => props.theme.colors.gray};
+        border: 1px solid ${props => props.theme.colors.blue};
         outline: none;
     }
 
     &:checked:before {
-        content: '\f00c';
-        font-size: 16px;
+        content: '';
         position: absolute;
-        top: 2px;
-        left: 2px;
-        color: black;
+        top: 3px;
+        left: 7px;
+        width: 4px;
+        height: 10px;
+        border: solid ${props => props.theme.colors.black};
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
     }
 
     + label {
-        color: black;
+        color: ${props => props.theme.colors.black};
     }
 `;
 
-const CheckBox = ({ labelText, checked, onClick, onChange }) => {
+const Label = styled.label`
+    margin-right: ${props => props.isInline ? props.theme.spaces[1] : 0}px;
+    font-size: 14px;
+    font-family: ${props => props.theme.fontLight};
+`;
+
+const CheckBox = ({ labelText, checked, onClick, onChange, inline }) => {
     return (
         <Flex alignItems='center'>
             <Box>
                 <CheckBoxInput type="checkbox" checked={checked} onChange={onChange} />
             </Box>
             <Box ml={1}>
-                <label>{labelText}</label>
+                <Label isInline={inline}>{labelText}</Label>
             </Box>
         </Flex>
     )
@@ -56,6 +65,11 @@ CheckBox.propTypes = {
     labelText: PropTypes.string,
     checked: PropTypes.bool,
     onChange: PropTypes.func,
+    inline: PropTypes.bool
+};
+
+CheckBox.defaultProps = {
+    inline: false
 };
 
 export default CheckBox;

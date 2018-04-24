@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	"strconv"
 	"time"
 
 	"github.com/jmoiron/sqlx"
@@ -418,4 +419,37 @@ func (s Storage) ExtendExperationTime(ID int64, expirationDate time.Time) error 
 	_, err := s.DB.Exec(cmd, expirationDate, ID)
 
 	return err
+}
+
+// SearchAdverts returns latest filtered adverts
+func (s Storage) SearchAdverts(f models.SearchAdvertsFilter, t board.AdvertType, time time.Time) ([]models.AdvertDetails, error) {
+	typeString := strconv.Itoa(int(t))
+	timeString := time.Format("2006-01-02 15::04::05")
+
+	adverts := []models.AdvertDetails{}
+	cmd := `SELECT ` + advertsFields + `, ` +
+		`u.UserName as Author ` +
+		`FROM Adverts a ` +
+		`INNER JOIN Users u ON a.Author = u.Id ` +
+		`WHERE ` +
+		`a.Type = ` + typeString + ` AND a.ExpiredAt > "` + timeString + `" AND a.IsDeleted = 0 ` +
+		`AND (:TradeCashInPerson = 0 OR a.TradeCashInPerson = :TradeCashInPerson) ` +
+		`AND (:TradeCashByMail = 0 OR a.TradeCashByMail = :TradeCashByMail) ` +
+		`AND (:TradeMoneyOrderByMail = 0 OR a.TradeMoneyOrderByMail = :TradeMoneyOrderByMail) ` +
+		`AND (:TradeOther = 0 OR a.TradeOther = :TradeOther) ` +
+		`AND (:CountryCode = "" OR a.CountryCode = :CountryCode) ` +
+		`AND (:StateCode = 0 OR a.StateCode = :StateCode) ` +
+		`AND (:City = "" OR LOWER(a.City) LIKE :City) ` +
+		`AND (:Amount = 0 OR (:Amount BETWEEN a.AmountFrom AND COALESCE(a.AmountTo, :Amount))) ` +
+		`AND (:Currency = "" OR a.Currency = :Currency) ` +
+		`ORDER BY a.CreatedAt`
+
+	nstmt, err := s.DB.PrepareNamed(cmd)
+	err = nstmt.Select(&adverts, f)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return adverts, nil
 }

@@ -10,6 +10,7 @@ const TabList = styled(UnstyledTabList) `
     justify-content: center;
     height: ${props => props.theme.introTabsHeight}px;
     margin-top: -${props => props.theme.introTabsHeight}px;
+    background: ${props => props.secondary ? props.theme.colors.darkGray : 'transparent'};
 `;
 
 const Tab = styled(UnstyledTab) `
@@ -20,7 +21,7 @@ const Tab = styled(UnstyledTab) `
     height: ${props => props.theme.introTabsHeight}px;
     width: 100%;
     background-color: ${props => props.selected ? props.theme.colors.white : 'transparent'};
-    color: ${props => props.selected ? props.theme.colors.black : props.theme.colors.mint};
+    color: ${props => props.selected ? props.theme.colors.black : (props.secondary ? props.theme.colors.white : props.theme.colors.mint)};
     font-size: ${props => props.theme.fontSizes[1]}px;
     font-family: ${props => props.theme.fontBold};
     line-height: 32px;
@@ -47,7 +48,7 @@ const Tab = styled(UnstyledTab) `
     }
 
     &:hover {
-        background-color: ${props => props.selected ? props.theme.colors.white : 'rgba(255, 255, 255, 0.1)'};
+        background-color: ${props => props.selected ? props.theme.colors.white : (props.secondary ? 'transparent' : 'rgba(255, 255, 255, 0.1)')};
     }
 `;
 

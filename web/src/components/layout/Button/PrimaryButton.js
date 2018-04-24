@@ -17,14 +17,16 @@ const Button = styled(BaseButton) `
     }
 `;
 
-const ButtonControl = ({ text, type, disabled, onClick, style, primary, className }) => (
+const ButtonControl = ({ text, type, disabled, onClick, style, primary, block, className }) => (
     <Button
         className={className}
         type={type}
         disabled={disabled}
         onClick={onClick}
         style={style}
-        primary={primary}>
+        primary={primary}
+        block={block}
+    >
         {text}
     </Button>
 );
@@ -36,6 +38,7 @@ ButtonControl.propTypes = {
     onClick: PropTypes.func,
     style: PropTypes.object,
     primary: PropTypes.bool,
+    block: PropTypes.bool,
     className: PropTypes.string,
 };
 
