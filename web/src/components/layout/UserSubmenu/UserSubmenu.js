@@ -24,11 +24,12 @@ const UserName = styled.span`
 
 const UserMenu = styled(Box) `
     position: absolute;
-    z-index: 1000;
+    right: -20px;
     margin-top: 11px;
     margin-left: -70px;
     padding: 8px 0px;
     background-color: ${theme.colors.darkBlue};
+    z-index: 1000;
 `;
 
 const UserMenuItem = styled(Flex) `
