@@ -15,6 +15,10 @@ import UserSettings from './UserSettings';
 import Dashboard from './Dashboard';
 import EditPosting from './EditPosting';
 import ContactUs from './ContactUs';
+import {
+    ForgotPassword,
+    ResetPassword,
+} from './ForgotPassword';
 
 import {
     Terms,
@@ -37,6 +41,8 @@ const Routes = ({ match }) => {
             <Route path={`/search`} component={SearchAdverts} />
             <Route path={`/register`} component={Registration} />
             <Route path={`/login`} component={Login} />
+            <Route path={`/forgot-password`} component={ForgotPassword} />
+            <Route path={`/password-recovery`} component={ResetPassword} />
             <Route path={`/post/:id`} component={AdvertDetails} />
             <Route path={`/contact-us`} component={ContactUs} />
 

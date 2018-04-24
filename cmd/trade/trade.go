@@ -18,8 +18,8 @@ func main() {
 	recaptchaSecret := flag.String("recaptchaSecret", "6LdTKksUAAAAAAMgKNhOcxgWYYCDRrgx8YoEH5qX", "HTTP server binding")
 
 	mailHost := flag.String("mailHost", "smtp.gmail.com:587", "HTTP server binding")
-	mailUsername := flag.String("mailUsername", "test@email.com", "HTTP server binding")
-	mailPassword := flag.String("mailPassword", "password", "HTTP server binding")
+	mailUsername := flag.String("mailUsername", "testtempmail07@gmail.com", "HTTP server binding")
+	mailPassword := flag.String("mailPassword", "sdksdk123", "HTTP server binding")
 	feedbackAddress := flag.String("feedbackAddress", "test2@email.com", "HTTP server binding")
 
 	flag.Parse()

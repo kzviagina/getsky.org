@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/satori/go.uuid"
 	"github.com/skycoin/getsky.org/db/models"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -53,6 +54,14 @@ func (u Users) Get(userName string) (*models.UserDetails, error) {
 func (u Users) GetByEmail(email string) (*models.UserDetails, error) {
 	user := models.UserDetails{}
 	err := u.DB.Get(&user, "SELECT Id, UserName, Email, TimeOffset, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status, RegisteredAt FROM Users u WHERE u.Email = ?", email)
+
+	return &user, err
+}
+
+// GetByResetPasswordCode tries to find a user record in DB by reset password code and returns error if not found
+func (u Users) GetByResetPasswordCode(resetPasswordCode string) (*models.UserDetails, error) {
+	user := models.UserDetails{}
+	err := u.DB.Get(&user, "SELECT Id, UserName, Email, TimeOffset, CountryCode, StateCode, City, PostalCode, DistanceUnits, Currency, Status, RegisteredAt FROM Users u WHERE u.ResetPasswordCode = ?", resetPasswordCode)
 
 	return &user, err
 }
@@ -129,4 +138,36 @@ func (u Users) ChangePassword(username string, password string) error {
 
 	_, err = u.DB.NamedExec(cmd, update)
 	return err
+}
+
+type resetPasswordCodeUpdateModel struct {
+	ResetPasswordCode string `db:"ResetPasswordCode"`
+	Email             string `db:"Email"`
+}
+
+// GenerateResetPasswordCode generates a new reset password code and saves it to the DB.
+func (u Users) GenerateResetPasswordCode(email string) (string, error) {
+	resetCode := uuid.NewV4().String()
+
+	updateModel := &resetPasswordCodeUpdateModel{
+		Email:             email,
+		ResetPasswordCode: resetCode,
+	}
+
+	cmd := `UPDATE Users SET` +
+		`  ResetPasswordCode = :ResetPasswordCode` +
+		`  WHERE Email = :Email`
+
+	_, err := u.DB.NamedExec(cmd, updateModel)
+	return resetCode, err
+}
+
+// ResetPasswordCode generates a new reset password code and saves it to the DB.
+func (u Users) ResetPasswordCode(code string, newPassword string) error {
+	user, err := u.GetByResetPasswordCode(code)
+	if err != nil {
+		return err
+	}
+
+	return u.ChangePassword(user.UserName, newPassword)
 }

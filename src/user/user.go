@@ -9,4 +9,7 @@ type Users interface {
 	Register(models.User, string) error
 	UpdateSettings(models.UserSettings) error
 	ChangePassword(string, string) error
+	GenerateResetPasswordCode(email string) (string, error)
+	ResetPasswordCode(code string, newPassword string) error
+	GetByResetPasswordCode(resetPasswordCode string) (*models.UserDetails, error)
 }

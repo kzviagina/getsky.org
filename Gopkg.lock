@@ -68,6 +68,17 @@
   ]
   revision = "05cef0741ade10ca668982355b3f3f0bcf0ff0a8"
 
+[[projects]]
+  name = "github.com/mattes/migrate"
+  packages = [
+    ".",
+    "database",
+    "database/mysql",
+    "source",
+    "source/file"
+  ]
+  revision = "035c07716cd373d88456ec4d701402df52584cb4"
+  version = "v3.0.1"
 
 [[projects]]
   name = "github.com/mattn/go-colorable"
@@ -92,6 +103,12 @@
   packages = ["difflib"]
   revision = "792786c7400a136282c1664665ae0a8db921c6c2"
   version = "v1.0.0"
+
+[[projects]]
+  name = "github.com/satori/go.uuid"
+  packages = ["."]
+  revision = "f58768cc1a7a7e77a3bd49e98cdd21419399b6a3"
+  version = "v1.2.0"
 
 [[projects]]
   name = "github.com/shopspring/decimal"
@@ -149,6 +166,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "4ac61c497d46f3c7e611766bd75735bb3a0b513c4d8765af4c7f64b865b0878c"
+  inputs-digest = "e698b7ce20fdb7ad9ba828d5558c7dd7df2d1d4d002385542fb8e635170646e0"
   solver-name = "gps-cdcl"
   solver-version = 1

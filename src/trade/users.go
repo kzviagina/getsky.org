@@ -9,6 +9,7 @@ import (
 	"github.com/skycoin/getsky.org/db/models"
 	"github.com/skycoin/getsky.org/src/auth"
 	ce "github.com/skycoin/getsky.org/src/errors"
+	"github.com/skycoin/getsky.org/src/mail"
 	"github.com/skycoin/getsky.org/src/util/httputil"
 
 	validator "gopkg.in/go-playground/validator.v9"
@@ -247,5 +248,100 @@ func ChangePasswordHandler(s *HTTPServer) httputil.APIHandler {
 		}
 
 		return s.users.ChangePassword(userName, body.NewPassword)
+	}
+}
+
+type resetPasswordRequest struct {
+	Email     string `json:"email" validate:"required"`
+	Recaptcha string `json:"recaptcha" validate:"required"`
+}
+
+// ResetPasswordRequestHandler generates a reset password code and sends it to the user's email
+// Method: POST
+// Accept: application/json
+// URI: /api/me/reset-password-request
+func ResetPasswordRequestHandler(s *HTTPServer) httputil.APIHandler {
+	return func(w http.ResponseWriter, r *http.Request) error {
+		body := &resetPasswordRequest{}
+		if err := json.NewDecoder(r.Body).Decode(body); err != nil {
+			return httputil.StatusError{
+				Err:  fmt.Errorf("Invalid json request body: %v", err),
+				Code: http.StatusBadRequest,
+			}
+		}
+
+		err := s.validate.Struct(body)
+		if err != nil {
+			return ce.ValidatorErrorsResponse(err.(validator.ValidationErrors))
+		}
+
+		res, err := s.checkRecaptcha(body.Recaptcha)
+		if err != nil {
+			return err
+		} else if !res {
+			return ce.CreateSingleValidationError("recaptcha", "is not valid")
+		}
+
+		_, err = s.users.GetByEmail(body.Email)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("the user with the email: '%s' doesn't exist", body.Email), http.StatusNotFound)
+			return nil
+		}
+
+		code, err := s.users.GenerateResetPasswordCode(body.Email)
+		if err != nil {
+			return err
+		}
+
+		scheme := ""
+		if r.URL.Scheme == "" {
+			scheme = `http://`
+		} else {
+			scheme = r.URL.Scheme
+		}
+		linkHref := scheme + r.Host + `/password-recovery?code=` + code
+		fmt.Println(linkHref)
+
+		err = s.mailer.SendMail(&mail.Letter{
+			To:      body.Email,
+			Subject: "BuySky Password Recovery",
+			Body:    `To set a new password go by this <a href='` + linkHref + `'>link</a>`,
+		})
+
+		return err
+	}
+}
+
+type resetPassword struct {
+	Code        string `json:"code" validate:"required"`
+	NewPassword string `json:"newPassword" validate:"required"`
+}
+
+// ResetPasswordHandler applies a new password for the user
+// Method: POST
+// Accept: application/json
+// URI: /api/me/reset-password
+func ResetPasswordHandler(s *HTTPServer) httputil.APIHandler {
+	return func(w http.ResponseWriter, r *http.Request) error {
+		body := &resetPassword{}
+		if err := json.NewDecoder(r.Body).Decode(body); err != nil {
+			return httputil.StatusError{
+				Err:  fmt.Errorf("Invalid json request body: %v", err),
+				Code: http.StatusBadRequest,
+			}
+		}
+
+		err := s.validate.Struct(body)
+		if err != nil {
+			return ce.ValidatorErrorsResponse(err.(validator.ValidationErrors))
+		}
+
+		err = s.users.ResetPasswordCode(body.Code, body.NewPassword)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("wrong reset password code: '%s'", body.Code), http.StatusBadRequest)
+			return nil
+		}
+
+		return nil
 	}
 }

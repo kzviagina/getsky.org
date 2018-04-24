@@ -54,9 +54,13 @@ func (m Mailer) SendMail(l *Letter) error {
 	auth := smtp.PlainAuth("", m.username, m.password, host.Hostname())
 
 	to := []string{l.To}
-	msg := []byte(fmt.Sprintf("To: %s\r\n"+
+	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
+
+	body := fmt.Sprintf("To: %s\r\n"+
 		"Subject: %s\r\n"+
+		mime+"\r\n"+
 		"\r\n"+
-		"%s\r\n", l.To, l.Subject, l.Body))
+		"%s\r\n", l.To, l.Subject, l.Body)
+	msg := []byte(body)
 	return smtp.SendMail(m.host, auth, m.username, to, msg)
 }
