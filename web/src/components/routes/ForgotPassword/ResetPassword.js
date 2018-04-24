@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm, Form } from 'redux-form';
 import { Box } from 'grid-styled';
-import queryString from 'query-string';
+import qs from 'qs';
 
 import Container from 'components/layout/Container';
 import { H2 } from 'components/layout/Text';
@@ -63,7 +63,7 @@ class ResetPassword extends React.Component {
         passwordBeenReset: false,
     }
     componentWillReceiveProps(newProps) {
-        const { code } = queryString.parse(this.props.location.search);
+        const { code } = qs.parse(this.props.location.search.replace('?', ''));
         this.setState({ code });
     }
     resetPassword = async () => {
