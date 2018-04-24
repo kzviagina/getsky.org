@@ -14,7 +14,7 @@ stop-docker: ## Stops all docker containers
 docker-up: ## Starts docker containers
 	docker-compose up -d
 
-run-docker: stop-docker build-web docker-up ## Run all containers
+run-docker: build-web docker-up ## Run all containers
 
 trade: ## Run trade back-end. To add arguments, do 'make ARGS="--foo" trade'.
 	go run cmd/trade/trade.go ${ARGS}&
