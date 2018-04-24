@@ -1,12 +1,16 @@
 const AUTH_ACCESS_TOKEN = 'AUTH_ACCESS_TOKEN';
 
 export const getAuthTokens = () => {
-    const tokens = localStorage.getItem(AUTH_ACCESS_TOKEN);
-    if (tokens !== null) {
-        return JSON.parse(tokens);
-    }
+    try {
+        const tokens = localStorage.getItem(AUTH_ACCESS_TOKEN);
+        if (tokens !== null) {
+            return JSON.parse(tokens);
+        }
 
-    return null;
+        return null;
+    } catch (e) {
+        return null;
+    }
 };
 
 export const putAuthTokens = tokens => {
