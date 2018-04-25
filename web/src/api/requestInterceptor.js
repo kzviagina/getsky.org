@@ -15,6 +15,7 @@ export const registerApiInterceptor = store => {
         return response;
     }, err => {
         // implement logic to handle bad response
-        return Promise.reject(err);
+        // Don't return Promise.reject to avoid crashing during react-snapshoting
+        return { hasError: true, data: err };
     });
 };

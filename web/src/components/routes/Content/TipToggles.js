@@ -10,12 +10,17 @@ const Label = styled.span`
 `
 
 const Header = styled(Flex)`
-    background-color: #F6F7F7;
+    background-color: ${props => props.theme.colors.lightGray2};
     color: black;
     cursor: pointer;
     padding-left: 15px;
     padding-right: 15px;
-    margin-bottom: 10px;
+    padding-bottom: 15px;
+    margin-bottom: 5px;
+
+    &:hover {
+        background-color: ${props => props.theme.colors.lightGray};
+    }
 `
 
 class TipToggles extends React.Component {
@@ -42,7 +47,7 @@ class TipToggles extends React.Component {
                     </Box>
                 </Header>
                 {expanded &&
-                    <Box mt={1}> {children}</Box>
+                    <Box mt={1} ml={'15px'}> {children}</Box>
                 }
             </Box>
         );
