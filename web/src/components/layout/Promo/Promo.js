@@ -31,7 +31,7 @@ const BuyBtn = styled(BuyButton) `
 `;
 
 const Title = styled(H2) `
-    margin-top: 90px;
+    margin-top: 80px;
 `;
 
 const Tip = styled.p`
@@ -47,26 +47,20 @@ const ActionText = styled.p`
     text-transform: uppercase;
 `;
 
-const BgImg = styled.img`
-    position: absolute; 
-    width: ${props => props.theme.container.width};
-    max-width: ${props => props.theme.container.maxWidth};
-    height: 400px;
-    z-index: 1;
-`;
-
 const Promo = styled.section`
-    height: 400px;
+    min-height: 400px;
     padding-left: ${props => props.theme.spaces[5]}px;
     padding-right: ${props => props.theme.spaces[5]}px;
+    padding-bottom: ${props => props.theme.spaces[7]}px;
     color: ${props => props.theme.colors.white};
     text-align: center;
     z-index: 2;
+    background: url(${bg}) 50% 50% no-repeat;
+    background-size: cover;
 `;
 
 export default () => (
-    <Container flexDirection="column" style={{ zIndex: 10000 }} >
-        <BgImg src={bg} />
+    <Container flexDirection="column">
         <Promo>
             <Title>Can't find the advert for you?</Title>
             <Tip>If you can't see a buyer or seller that is offering what you want, you can post your own advert.</Tip>
