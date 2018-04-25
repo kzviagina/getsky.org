@@ -51,6 +51,7 @@ const FiltersWrapper = styled.div`
 const TabsWrapper = styled.div`
     padding-top: 96px;
     box-shadow: 0 -8px 10px 2px rgba(0,114,255,0.07);
+    background: ${props => props.theme.colors.darkGray};
 `;
 
 const Title = styled.h2`
@@ -131,9 +132,9 @@ class SearchAdverts extends React.Component {
 
                 <TabsWrapper>
                     <Tabs>
-                        <TabList secondary>
-                            <Tab tab={'buy-tab'} secondary><strong>Buy Skycoin</strong></Tab>
-                            <Tab tab={'sell-tab'} secondary><strong>Sell Skycoin</strong></Tab>
+                        <TabList>
+                            <Tab tab={'buy-tab'}><strong>Buy Skycoin</strong></Tab>
+                            <Tab tab={'sell-tab'}><strong>Sell Skycoin</strong></Tab>
                         </TabList>
                         <TabPanel>
                             <Container flex='1 0 auto' flexDirection="column" pt={'50px'}>
