@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import Container from 'components/layout/Container';
 import { H1, H2, P } from 'components/layout/Text';
+import TextContainer from './TextContainer';
 
 const Ul = styled.ul`
     list-style-type: none;
@@ -17,7 +17,7 @@ const Li = styled.li`
 `
 
 export default () => (
-    <Container flex='1 0 auto' flexDirection="column" py={4}>
+    <TextContainer flex='1 0 auto' flexDirection="column" py={4}>
         <H1>Terms</H1>
 
         <H2>Terms of Service</H2>
@@ -171,5 +171,5 @@ export default () => (
         <H2>General Terms</H2>
         <P>This Agreement shall be treated as though it were executed and performed in Atlanta, Georgia, and shall be governed by and construed in accordance with the laws of the State of Georgia without regard to conflict of law principles. In addition, you agree to submit to the personal jurisdiction and venue of such courts. Any cause of action by you with respect to our Website or Service must be instituted within one (1) year after the cause of action arose or be forever waived and barred. Should any part of this Agreement be held invalid or unenforceable, that portion shall be construed consistent with applicable law and the remaining portions shall remain in full force and effect. To the extent that any Content is in conflict or inconsistent with this Agreement, this Agreement shall take precedence. Our failure to enforce any provision of this Agreement shall not be deemed a waiver of such provision nor of the right to enforce such provision. Our rights under this Agreement shall survive any termination of this Agreement.</P>
 
-    </Container>
+    </TextContainer>
 );

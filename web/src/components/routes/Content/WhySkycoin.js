@@ -1,10 +1,10 @@
 import React from 'react';
 
-import Container from 'components/layout/Container';
 import { H1, H2, H3, P } from 'components/layout/Text';
+import TextContainer from './TextContainer';
 
 export default () => (
-    <Container flex='1 0 auto' flexDirection="column" py={4}>
+    <TextContainer flex='1 0 auto' flexDirection="column" py={4}>
         <H1>Why Skycoin?</H1>
         
         <H2>WHAT IS SKYCOIN?</H2>
@@ -37,5 +37,5 @@ export default () => (
 
         <H2>SKYCOIN IS ANONYMOUS AND DECENTRALIZED</H2>
         <P>We all love Satoshi, especially our founders, but what bitcoin has become is not what he intended. Skycoin was created to fulfill Satoshi’s original vision of a truly decentralized and anonymous cryptocurrency. No matter how decentralized a coin is if it relies on traditional ISPs it will never be decentralized. Skycoin aims to change this.</P>
-    </Container>
+    </TextContainer>
 );

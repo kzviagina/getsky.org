@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import Container from 'components/layout/Container';
 import { H1, H2, P } from 'components/layout/Text';
+import TextContainer from './TextContainer';
 
 const Ul = styled.ul`
     list-style-type: none;
@@ -17,7 +17,7 @@ const Li = styled.li`
 `
 
 export default () => (
-    <Container flex='1 0 auto' flexDirection="column" py={4}>
+    <TextContainer flex='1 0 auto' flexDirection="column" py={4}>
         <H1>Privacy</H1>
 
         <H2>Privacy Policy</H2>
@@ -85,5 +85,5 @@ export default () => (
 
         <H2>Changes to our Privacy Policy</H2>
         <P>As necessary to address changes in laws or our business practices, we may modify our Privacy Policy, in whole or in part, to address these changes. We will typically notify users by some message on our Website home page that our Privacy Policy has changed. We will also change the "Last Updated" date at the beginning of this Privacy Policy. Any changes we make to our Privacy Policy are effective as of this Last Updated date and replace any prior Privacy Policies. We encourage you to review our Privacy Policy periodically to make sure you still agree with it.</P>
-    </Container>
+    </TextContainer>
 );
