@@ -10,7 +10,7 @@
     "axios": "^0.18.0",
     "decimal.js-light": "^2.3.1",
     "font-awesome": "^4.7.0",
-    "grid-styled": "^3.2.0",
+    "grid-styled": "^4.1.0",
     "history": "^4.7.2",
     "lodash": "^4.17.5",
     "moment": "^2.20.1",
@@ -30,7 +30,7 @@
     "redux": "^3.7.2",
     "redux-form": "^7.2.3",
     "redux-thunk": "^2.2.0",
-    "styled-components": "^3.1.6"
+    "styled-components": "^3.2.6"
   },
   "devDependencies": {
     "mock-local-storage": "^1.0.5",
@@ -44,8 +44,5 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://127.0.0.1:8081",
-  "reactSnapshot": {
-    "snapshotDelay": 1000
-  }
+  "proxy": "http://127.0.0.1:8081"
 }
