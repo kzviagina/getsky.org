@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Flex, Box } from 'grid-styled';
-import { Field, Fields, reduxForm, Form } from 'redux-form';
+import { Field, Fields, reduxForm, Form, formValueSelector, change } from 'redux-form';
 import { FormDropdown, FormInput, FormCheckbox, FormLabel } from '../../layout/Form';
 import { Button } from 'components/layout/Button';
 import { ACCEPT_TRADE_OPTIONS } from 'components/layout/PostingForm';
@@ -24,7 +24,8 @@ const ConnectedDropdowns = (fields) => (
                 options={fields.states}
                 triggerOnChange={false}
                 disabled={fields.countryCode.input.value !== COUNTRY_HAS_STATES}
-                label="State" />
+                label="State"
+            />
         </Box>
     </Flex>
 );
@@ -41,6 +42,15 @@ const Hr = styled.hr`
 `;
 
 class Filters extends React.PureComponent{
+
+    componentWillUpdate(nextProps) {
+        const { countryCode, stateCode } = this.props;
+        if (countryCode !== nextProps.countryCode && nextProps.countryCode !== COUNTRY_HAS_STATES && stateCode !== '') {
+            this.props.dispatch(change('filters', 'stateCode', ''));
+        }
+    }
+
+
     render(){
         const { countries, states, currencies, handleSubmit } = this.props;
         return (
@@ -95,7 +105,13 @@ Filters = reduxForm({
     },
 })(Filters);
 
-const mapStateToProps = state => ({ initialValues: state.search.filters });
+const formSelector = formValueSelector('filters');
+
+const mapStateToProps = state => ({
+    initialValues: state.search.filters,
+    countryCode: formSelector(state, 'countryCode'),
+    stateCode: formSelector(state, 'stateCode'),
+});
 
 Filters = connect(mapStateToProps)(Filters);
 

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Flex, Box } from 'grid-styled';
 
 import { BuyButton, SellButton } from 'components/layout/Button';
-import { H1 } from 'components/layout/Text';
+import { H2 } from 'components/layout/Text';
 import Table from 'components/layout/Table';
 
 export const RightCornerButton = {
@@ -15,7 +15,7 @@ export const RightCornerButton = {
 const AdvertsList = ({ title, adverts, noAdvertsMessage, rightCorner, columns, rowComponent, rowOperations }) => (
     <Box mt={3}>
         <Flex alignItems={'center'} justifyContent={'space-between'}>
-            <H1>{title}</H1>
+            <H2>{title}</H2>
             <Box>{rightCorner}</Box>
         </Flex>
         {adverts.length > 0 &&
