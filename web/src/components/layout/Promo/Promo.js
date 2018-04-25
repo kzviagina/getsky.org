@@ -16,6 +16,11 @@ const SellBtn = styled(SellButton) `
     border-color: ${props => props.theme.colors.white};
     color: ${props => props.theme.colors.black};
     font-family: ${props => props.theme.fontBold};
+    
+    &:hover {
+        background: ${props => props.theme.colors.lightBlue};
+        border-color: ${props => props.theme.colors.lightBlue};
+    }
 `;
 
 const BuyBtn = styled(BuyButton) `
@@ -27,20 +32,20 @@ const BuyBtn = styled(BuyButton) `
 
 const Title = styled(H2) `
     margin-top: 90px;
-`
+`;
 
 const Tip = styled.p`
     margin-top: 12px;
     font-size: 18px;
-`
+`;
 
 const ActionText = styled.p`
     margin-top: 60px;
-    margin-bottom: 29px;
+    margin-bottom: 0;
     font-size: 18px;
     color: ${props => props.theme.colors.grayBlue};
     text-transform: uppercase;
-`
+`;
 
 const BgImg = styled.img`
     position: absolute; 
@@ -48,11 +53,13 @@ const BgImg = styled.img`
     max-width: ${props => props.theme.container.maxWidth};
     height: 400px;
     z-index: 1;
-`
+`;
 
 const Promo = styled.section`
-    color: ${props => props.theme.colors.white};
     height: 400px;
+    padding-left: ${props => props.theme.spaces[5]}px;
+    padding-right: ${props => props.theme.spaces[5]}px;
+    color: ${props => props.theme.colors.white};
     text-align: center;
     z-index: 2;
 `;
@@ -64,11 +71,11 @@ export default () => (
             <Title>Can't find the advert for you?</Title>
             <Tip>If you can't see a buyer or seller that is offering what you want, you can post your own advert.</Tip>
             <ActionText>I want to advertise to</ActionText>
-            <Flex justifyContent={'center'}>
-                <Box mr={'15px'}>
-                    <BuyBtn text={'Buy Skycoin'} />
+            <Flex justifyContent={'center'} flexWrap="wrap">
+                <Box mx={2} mt={4}>
+                    <BuyBtn text={'Buy Skycoin'} primary />
                 </Box>
-                <Box ml={'15px'}>
+                <Box mx={2} mt={4}>
                     <SellBtn text={'Sell Skycoin'} />
                 </Box>
             </Flex>

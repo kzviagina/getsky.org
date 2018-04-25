@@ -8,8 +8,8 @@ export default {
         lightBlue: '#F3F7FC',
         lightGreen: '#DDF6EE',
 
-        mint: '#38F0B8',
-        mintAlpha7: '#73f4ce',
+        mint: '#35E1EA',
+        mintAlpha7: 'rgba(53, 225, 234, 0.7)',
 
         lightGray: '#F3F5F7;',
         lightGray2: '#F6F7F7',
