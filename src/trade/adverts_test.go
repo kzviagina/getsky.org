@@ -419,7 +419,7 @@ func TestUpdateAdvert(t *testing.T) {
 			url:            "/api/postings/1",
 			body:           `{}`,
 			expectedStatus: http.StatusBadRequest,
-			expectedBody:   `[{"key":"Currency","message":"is required"},{"key":"TravelDistance","message":"is required"},{"key":"CountryCode","message":"is required"},{"key":"City","message":"is required"}]`,
+			expectedBody:   `[{"key":"Currency","message":"is required"},{"key":"CountryCode","message":"is required"},{"key":"City","message":"is required"}]`,
 		},
 		{
 			name:           "should return 404 error if advert with specified id is not exists",
