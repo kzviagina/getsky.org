@@ -73,7 +73,7 @@ func PostMessageHandler(s *HTTPServer) httputil.APIHandler {
 			CreatedAt: s.serverTime.Now(),
 			IsRead:    false,
 		}
-		message, err = s.messages.SaveMessage(message)
+		message, err = s.messages.Post(message)
 		if err != nil {
 			return err
 		}
@@ -162,7 +162,7 @@ func UpdateMessageHandler(s *HTTPServer) httputil.APIHandler {
 			IsRead:    types.BitBool(body.IsRead),
 		}
 
-		if err = s.messages.UpdateMessage(message); err != nil {
+		if err = s.messages.Update(message); err != nil {
 			return err
 		}
 
@@ -201,7 +201,7 @@ func GetMessageAuthorsHandler(s *HTTPServer) httputil.APIHandler {
 			return nil
 		}
 
-		userNames, err := s.messages.GetAdvertMessageAuthors(advertID)
+		userNames, err := s.messages.GetAdvertAuthors(advertID)
 		if err != nil {
 			return err
 		}
@@ -237,7 +237,7 @@ func GetMessagesHandler(s *HTTPServer) httputil.APIHandler {
 			return nil
 		}
 
-		messages, err := s.messages.GetAdvertMessagesByAuthor(advertID, authorName)
+		messages, err := s.messages.GetByAdvertAuthor(advertID, authorName)
 		if err != nil {
 			return err
 		}

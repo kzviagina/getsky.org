@@ -27,11 +27,11 @@ run-mysql: ## Run mysql in docker
 
 run-local: run-mysql db-schema trade ## Start DB and apply schema changes, run API
 
-test-api: ## Run tests
+test-api: ## Run back-end tests
 	go test ./cmd/... -timeout=1m -cover -v
 	go test ./src/... -timeout=1m -cover -v 
 
-test-web: 
+test-web: ## Run UI tests
 	cd web; yarn install
 	cd web; CI=true yarn test
 

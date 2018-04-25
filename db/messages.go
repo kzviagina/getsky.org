@@ -17,8 +17,8 @@ func NewMessages(db *sqlx.DB) Messages {
 	return Messages{db}
 }
 
-// SaveMessage saves specified message to the DB, returns created message or error
-func (m Messages) SaveMessage(msg *models.Message) (*models.Message, error) {
+// Post saves specified message to the DB, returns created message or error
+func (m Messages) Post(msg *models.Message) (*models.Message, error) {
 	cmd := `INSERT INTO Messages ` +
 		`(Author, ` +
 		`AdvertId, ` +
@@ -48,8 +48,8 @@ func (m Messages) SaveMessage(msg *models.Message) (*models.Message, error) {
 	return msg, nil
 }
 
-// UpdateMessage updates message record in the DB
-func (m Messages) UpdateMessage(msg *models.Message) error {
+// Update updates message record in the DB
+func (m Messages) Update(msg *models.Message) error {
 	cmd := `UPDATE Messages ` +
 		`SET IsRead=:IsRead ` +
 		`WHERE Id=:Id`
@@ -67,8 +67,8 @@ type AdvertMessagesInfo struct {
 	LastMessageTime time.Time `json:"lastMessageTime" db:"LastMessageTime"`
 }
 
-// GetAdvertMessageAuthors returns usernames of all authors that wrote messages under specific advert
-func (m Messages) GetAdvertMessageAuthors(advertID int64) ([]AdvertMessagesInfo, error) {
+// GetAdvertAuthors returns usernames of all authors that wrote messages under specific advert
+func (m Messages) GetAdvertAuthors(advertID int64) ([]AdvertMessagesInfo, error) {
 	res := []AdvertMessagesInfo{}
 	cmd := `SELECT U.UserName AS Author, COUNT(*) AS TotalMessages, ` +
 
@@ -124,8 +124,8 @@ func (m Messages) Get(id int64) (*models.MessageDetails, error) {
 	return &res[0], nil
 }
 
-// GetAdvertMessagesByAuthor returns all messages of specified advert madden by specified author and all replies to this author
-func (m Messages) GetAdvertMessagesByAuthor(advertID int64, username string) ([]models.MessageDetails, error) {
+// GetByAdvertAuthor returns all messages of specified advert made by specified author and all replies to this author
+func (m Messages) GetByAdvertAuthor(advertID int64, username string) ([]models.MessageDetails, error) {
 	res := []models.MessageDetails{}
 	cmd := `SELECT M.Id, ` +
 		`U.UserName AS Author, ` +
