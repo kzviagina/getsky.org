@@ -158,7 +158,7 @@ type updateAdvertRequest struct {
 
 	Currency          string `json:"currency" validate:"required"`
 	AdditionalInfo    string `json:"additionalInfo"`
-	TravelDistance    int64  `json:"travelDistance" validate:"required"`
+	TravelDistance    int64  `json:"travelDistance"`
 	TravelDistanceUoM string `json:"travelDistanceUoM"`
 
 	CountryCode string                `json:"countryCode" validate:"required"`

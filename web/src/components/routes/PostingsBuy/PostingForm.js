@@ -18,7 +18,7 @@ const r = required();
 const rMin = rangedMin(RANGED_MIN);
 const rMax = rangedMax(RANGED_MAX);
 
-const rData = required(v => v ? v.data : v);
+const rData = required(v => v ? v.data === 0 ? 1 : v.data : v);
 const minData0 = min(0, v => v.data);
 const maxData9999 = max(9999, v => v.data);
 
