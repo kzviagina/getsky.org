@@ -1,2 +1,0 @@
-ALTER TABLE Messages
-ADD IsRead bit DEFAULT 0;

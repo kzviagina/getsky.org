@@ -1,2 +1,0 @@
-ALTER TABLE `Adverts`
-    ADD `IsDeleted` BIT NOT NULL DEFAULT 0;

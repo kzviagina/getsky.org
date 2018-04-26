@@ -1,3 +1,0 @@
-ALTER TABLE `Adverts` 
-    MODIFY COLUMN `FixedPrice` DECIMAL NOT NULL,
-    MODIFY COLUMN `PercentageAdjustment` DECIMAL NOT NULL;

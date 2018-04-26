@@ -1,2 +1,0 @@
-ALTER TABLE Messages 
-DROP COLUMN IsRead;
