@@ -87,4 +87,15 @@ CREATE TABLE `Messages` (
   CONSTRAINT `Messages_fk1` FOREIGN KEY (`AdvertId`) REFERENCES `Adverts` (`Id`)
 );
 
+INSERT INTO `getskytrade`.`Countries`
+(`Code`, `Name`)
+VALUES
+("US", "United States of America"),
+("GR", "Greece");
+
+INSERT INTO `getskytrade`.`States`
+(`Code`, `Name`)
+VALUES
+("CA", "California");
+
 COMMIT;
