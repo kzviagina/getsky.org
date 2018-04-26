@@ -28,7 +28,7 @@ export default () => (
     <Box mt={'125px'}>
         <Promo />
         <Background>
-            <LinksContainer justifyContent={'space-between'}>
+            <LinksContainer justifyContent={'space-between'} flexWrap="wrap">
                 <Link path={'/'} text={'Home'} />
                 <Link path={'/why-skycoin'} text={'Why Skycoin'} />
                 <Link path={'/search'} text={'Search'} />

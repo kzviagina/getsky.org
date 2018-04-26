@@ -6,7 +6,7 @@ import { BuyButton, SellButton } from 'components/layout/Button';
 import { H2 } from 'components/layout/Text';
 
 const DashboardTitle = ({ userName }) => (
-    <Flex justifyContent='space-between' alignItems={'center'} my={'5px'}>
+    <Flex justifyContent='space-between' alignItems={'center'} my={4}>
         <Flex alignItems='center' >
             <H2>Hello, {userName}</H2>
         </Flex>
