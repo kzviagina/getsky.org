@@ -12,6 +12,10 @@ import (
 // Authenticator provides authentication methods
 type Authenticator interface {
 	VerifyPassword(string, string) error
+	ChangePassword(string, string) error
+	GenerateResetPasswordCode(email string) (string, error)
+	ResetPasswordCode(code string, newPassword string) error
+	GetByResetPasswordCode(resetPasswordCode string) (*models.UserDetails, error)
 }
 
 // GetToken creates new JWT token from user name

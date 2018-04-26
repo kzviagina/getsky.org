@@ -247,7 +247,7 @@ func ChangePasswordHandler(s *HTTPServer) httputil.APIHandler {
 			return ce.CreateSingleValidationError("oldPassword", "Specified old password is invalid")
 		}
 
-		return s.users.ChangePassword(userName, body.NewPassword)
+		return s.authenticator.ChangePassword(userName, body.NewPassword)
 	}
 }
 
@@ -288,7 +288,7 @@ func ResetPasswordRequestHandler(s *HTTPServer) httputil.APIHandler {
 			return nil
 		}
 
-		code, err := s.users.GenerateResetPasswordCode(body.Email)
+		code, err := s.authenticator.GenerateResetPasswordCode(body.Email)
 		if err != nil {
 			return err
 		}
@@ -336,7 +336,7 @@ func ResetPasswordHandler(s *HTTPServer) httputil.APIHandler {
 			return ce.ValidatorErrorsResponse(err.(validator.ValidationErrors))
 		}
 
-		err = s.users.ResetPasswordCode(body.Code, body.NewPassword)
+		err = s.authenticator.ResetPasswordCode(body.Code, body.NewPassword)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("wrong reset password code: '%s'", body.Code), http.StatusBadRequest)
 			return nil

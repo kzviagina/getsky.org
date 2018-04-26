@@ -14,7 +14,7 @@ import (
 func GetSkycoinPrice(s *HTTPServer) httputil.APIHandler {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		currency := mux.Vars(r)["currency"]
-		response, err := s.skycoinPrices.GetSkycoinPrice(currency)
+		response, err := (*s.skycoinPrices).GetSkycoinPrice(currency)
 		if err != nil {
 			return err
 		}

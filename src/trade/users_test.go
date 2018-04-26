@@ -20,6 +20,21 @@ import (
 
 type FakeAuthenticator struct {
 	mock.Mock
+	db *sqlx.DB
+	da tradedb.Authenticator
+}
+
+func (fa *FakeAuthenticator) ChangePassword(username string, password string) error {
+	return fa.da.ChangePassword(username, password)
+}
+func (fa *FakeAuthenticator) GenerateResetPasswordCode(email string) (string, error) {
+	return fa.da.GenerateResetPasswordCode(email)
+}
+func (fa *FakeAuthenticator) ResetPasswordCode(code string, newPassword string) error {
+	return fa.da.ResetPasswordCode(code, newPassword)
+}
+func (fa *FakeAuthenticator) GetByResetPasswordCode(resetPasswordCode string) (*models.UserDetails, error) {
+	return fa.da.GetByResetPasswordCode(resetPasswordCode)
 }
 
 func (fa *FakeAuthenticator) VerifyPassword(username string, password string) error {
@@ -97,8 +112,8 @@ func TestAuthenticateHandler(t *testing.T) {
 		require.NoError(t, err)
 		req.Header.Set("Content-Type", tc.contentType)
 
-		a := &FakeAuthenticator{}
 		sql := sqlx.NewDb(db, "mysql")
+		a := &FakeAuthenticator{db: sql, da: tradedb.NewAuthenticator(sql)}
 		u := tradedb.NewUsers(sql)
 
 		w := httptest.NewRecorder()
@@ -176,8 +191,8 @@ func TestRegisterHandler(t *testing.T) {
 		require.NoError(t, err)
 		req.Header.Set("Content-Type", tc.contentType)
 
-		a := &FakeAuthenticator{}
 		sql := sqlx.NewDb(db, "mysql")
+		a := &FakeAuthenticator{db: sql, da: tradedb.NewAuthenticator(sql)}
 		u := tradedb.NewUsers(sql)
 
 		w := httptest.NewRecorder()
@@ -391,7 +406,7 @@ func TestChangeUserPasswordSettings(t *testing.T) {
 		w := httptest.NewRecorder()
 		server := &HTTPServer{users: u, log: logger.InitLogger()}
 		server.validate = validator.New()
-		server.authenticator = &FakeAuthenticator{}
+		server.authenticator = &FakeAuthenticator{db: sql, da: tradedb.NewAuthenticator(sql)}
 
 		stubAuthHeader := func(h http.Handler) http.Handler {
 			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

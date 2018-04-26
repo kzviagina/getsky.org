@@ -8,6 +8,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/skycoin/getsky.org/db"
 	"github.com/skycoin/getsky.org/src/mail"
+	"github.com/skycoin/getsky.org/src/skycoinPrice"
 	"github.com/skycoin/getsky.org/src/trade"
 	"github.com/skycoin/getsky.org/src/util/logger"
 )
@@ -36,9 +37,12 @@ func main() {
 	users := db.NewUsers(sqlDb)
 	geo := db.NewGeo(sqlDb)
 	messages := db.NewMessages(sqlDb)
+	skycoinPrices := skycoinPrice.NewSkycoinPrices()
 	mailer := mail.NewMailer(*mailHost, *mailUsername, *mailPassword, *feedbackAddress)
+	skycoinPricesInterface := skycoinPrice.Service(skycoinPrices)
 
-	server := trade.NewHTTPServer(*recaptchaSecret, *bindingFlag, storage, users, auth, log, geo, messages, mailer)
+	server := trade.NewHTTPServer(*recaptchaSecret, *bindingFlag, storage, users, auth, log, geo, messages, mailer, &skycoinPricesInterface)
+	skycoinPrices.StartUpdatingCycle()
 
 	if err := server.Run(); err != nil {
 		panic(err.Error())

@@ -4,12 +4,18 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"time"
 )
 
 const refreshInterval = time.Minute * 5
 
 var currencies = []string{"EUR", "USD"}
+
+// Service provides a logic of retrieving Skycoin prices
+type Service interface {
+	GetSkycoinPrice(currency string) ([]byte, error)
+}
 
 // SkycoinPrice represents a cached value of the skycoin price
 type SkycoinPrice struct {
@@ -37,20 +43,22 @@ func getNewPrice(currency string) ([]byte, error) {
 
 // SkycoinPrices represents a storage of all cached values of the Skycoin price
 type SkycoinPrices struct {
-	prices              map[string]*SkycoinPrice
-	refreshCycleChannel chan string
+	prices map[string]*SkycoinPrice
+	stop   chan string
+	quit   chan os.Signal
 }
 
 // NewSkycoinPrices creates a new instance of the SkycoinPrices
 func NewSkycoinPrices() *SkycoinPrices {
 	return &SkycoinPrices{
-		prices:              make(map[string]*SkycoinPrice),
-		refreshCycleChannel: make(chan string, 1),
+		prices: make(map[string]*SkycoinPrice),
+		stop:   make(chan string, 1),
+		quit:   make(chan os.Signal, 1),
 	}
 }
 
 // GetSkycoinPrice returns a skycon price
-func (prices *SkycoinPrices) GetSkycoinPrice(currency string) ([]byte, error) {
+func (prices SkycoinPrices) GetSkycoinPrice(currency string) ([]byte, error) {
 	if val, exists := prices.prices[currency]; exists {
 		return val.apiResponse, nil
 	}
@@ -71,7 +79,7 @@ rootLoop:
 			prices.prices[c] = &SkycoinPrice{apiResponse: resp}
 		}
 		select {
-		case <-prices.refreshCycleChannel:
+		case <-prices.stop:
 			break rootLoop
 		case <-time.After(refreshInterval):
 			continue
@@ -80,11 +88,16 @@ rootLoop:
 }
 
 // StartUpdatingCycle starts cycle that requests prices from the remote server
-func (prices *SkycoinPrices) StartUpdatingCycle() {
-	go updatePrices(prices, currencies)
+func (prices SkycoinPrices) StartUpdatingCycle() {
+	go updatePrices(&prices, currencies)
+
+	go func() {
+		<-prices.quit
+		prices.StopUpdatingCycle()
+	}()
 }
 
 // StopUpdatingCycle stops cycle
-func (prices *SkycoinPrices) StopUpdatingCycle() {
-	prices.refreshCycleChannel <- "STOP"
+func (prices SkycoinPrices) StopUpdatingCycle() {
+	prices.stop <- "STOP"
 }

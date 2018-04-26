@@ -25,7 +25,7 @@ import (
 type HTTPServer struct {
 	serverTime     ServerTime
 	mailer         mail.IMailer
-	skycoinPrices  *skycoinPrice.SkycoinPrices
+	skycoinPrices  *skycoinPrice.Service
 	checkRecaptcha auth.RecaptchaChecker
 	binding        string
 	geo            geo.Geo
@@ -41,10 +41,10 @@ type HTTPServer struct {
 }
 
 // NewHTTPServer creates new http server
-func NewHTTPServer(recaptchaSecret string, binding string, board board.Board, users user.Users, a auth.Authenticator, log logrus.FieldLogger, g geo.Geo, messages messages.Messages, mailer mail.IMailer) *HTTPServer {
+func NewHTTPServer(recaptchaSecret string, binding string, board board.Board, users user.Users, a auth.Authenticator, log logrus.FieldLogger, g geo.Geo, messages messages.Messages, mailer mail.IMailer, skycoinPrices *skycoinPrice.Service) *HTTPServer {
 	return &HTTPServer{
 		checkRecaptcha: auth.InitRecaptchaChecker(recaptchaSecret),
-		skycoinPrices:  skycoinPrice.NewSkycoinPrices(),
+		skycoinPrices:  skycoinPrices,
 		mailer:         mailer,
 		binding:        binding,
 		board:          board,
@@ -87,8 +87,6 @@ func (s *HTTPServer) Run() error {
 		Handler:      r,
 	}
 
-	s.skycoinPrices.StartUpdatingCycle()
-
 	errorC := make(chan error)
 	go func() {
 		if err := s.httpListener.ListenAndServe(); err != nil {
@@ -109,8 +107,6 @@ func (s *HTTPServer) Run() error {
 func (s *HTTPServer) Shutdown() error {
 	s.log.Info("HTTP service shutting down")
 	close(s.done)
-
-	s.skycoinPrices.StopUpdatingCycle()
 
 	// Create a deadline to wait for.
 	wait := time.Second * 5
