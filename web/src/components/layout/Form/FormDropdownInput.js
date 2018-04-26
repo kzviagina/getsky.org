@@ -9,20 +9,6 @@ import FormItem from './FormItem';
 const inputStyle = { borderRight: 0 };
 
 class FormDropdownInput extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.onChangeText = this.onChangeText.bind(this);
-        this.onChangeDropdownValue = this.onChangeDropdownValue.bind(this);
-
-        this.state = {
-            value: {
-                data: '',
-                prefix: '',
-            }
-        }
-    }
-
     componentWillMount() {
         const { defaultValue, input: { value, onChange } } = this.props;
 
@@ -31,12 +17,21 @@ class FormDropdownInput extends React.Component {
         }
     }
 
-    onChangeText(e) {
+    componentWillReceiveProps(newProps) {
+        const { input: { value, onChange } } = this.props;
+
+        if (this.props.defaultValue.data !== newProps.defaultValue.data
+            || this.props.defaultValue.prefix !== newProps.defaultValue.prefix) {
+            onChange(newProps.defaultValue);
+        }
+    }
+
+    onChangeText = e => {
         const { input: { onChange, value } } = this.props;
         onChange({ ...value, data: e.target.value });
     }
 
-    onChangeDropdownValue(e) {
+    onChangeDropdownValue = e => {
         const { input: { onChange, value } } = this.props;
         onChange({ ...value, prefix: e.target.value });
     }
@@ -52,7 +47,14 @@ class FormDropdownInput extends React.Component {
                         <ControlInput name={`${name}_input_text`} type={type} min={min} max={max} value={value ? value.data : ''} placeholder={'Distance'} onChange={this.onChangeText} style={inputStyle} error={showError} />
                     </Box>
                     <Box width={1 / 4}>
-                        <ControlDropdown name={`${name}_input_options`} options={options} defaultValue={value ? value.prefix : ''} onChange={this.onChangeDropdownValue} error={showError} />
+                        <ControlDropdown
+                            name={`${name}_input_options`}
+                            options={options}
+                            defaultValue={value ? value.prefix : ''}
+                            value={value ? value.prefix : ''}
+                            input={{ value: value ? value.prefix : '' }}
+                            onChange={this.onChangeDropdownValue}
+                            error={showError} />
                     </Box>
                 </Flex>
             </FormItem>

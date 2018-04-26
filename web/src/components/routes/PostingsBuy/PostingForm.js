@@ -22,7 +22,7 @@ const rData = required(v => v ? v.data === 0 ? 1 : v.data : v);
 const minData0 = min(0, v => v.data);
 const maxData9999 = max(9999, v => v.data);
 
-const FormPostingToBuy = ({ states, countries, country, handleSubmit, submitting, pristine, defaultCountry, editMode }) => (
+const FormPostingToBuy = ({ states, countries, country, handleSubmit, submitting, pristine, defaultCountry, editMode, defaultDistanceUnits }) => (
     <Form onSubmit={handleSubmit} noValidate>
         <Box width={1 / 2}>
             <FormGroup>
@@ -57,7 +57,7 @@ const FormPostingToBuy = ({ states, countries, country, handleSubmit, submitting
                     component={FormDropdownInput}
                     options={DISTANCE_UNITS_OPTIONS}
                     parse={(v) => ({ ...v, data: v.data ? parseInt(v.data, 10) : '' })}
-                    defaultValue={{ data: '', prefix: DISTANCE_UNITS_OPTIONS[0].value }}
+                    defaultValue={{ data: '', prefix: defaultDistanceUnits || DISTANCE_UNITS_OPTIONS[0].value }}
                     label={'How far will you travel to trade?'}
                     isRequired
                     min={0}
