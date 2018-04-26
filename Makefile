@@ -58,7 +58,7 @@ lint: ## Run linters. Use make install-linters first.
 		-E vet \
 		./...
 
-check: run-mysql lint test-api test-web ## Run tests and linters
+check: lint test-api test-web ## Run tests and linters
 
 install-linters: ## Install linters
 	go get -u github.com/FiloSottile/vendorcheck
